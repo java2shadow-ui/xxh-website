@@ -1,0 +1,263 @@
+<%- include('partials/header-v2', { path: 'grades', langBase: '/grade/' + r.slug, pageCss: ['/static/css/style.css?v=20261024b','/static/css/grades.css?v=20261024b','/static/css/grades-v2.css?v=20261101d','/static/css/pages-v2.css?v=20261102a'] }) %>
+
+<section class="g-hero" style="padding:36px 0 32px">
+  <div class="wrap">
+    <div class="g-crumb">
+      <a href="/<%= lang %>"><%= t.nav_home %></a> ›
+      <a href="/<%= lang %>/grades"><%= GT.g_title %></a> ›
+      <span><%= r.grade %></span>
+    </div>
+    <div style="display:flex;align-items:flex-start;gap:18px;flex-wrap:wrap;margin-top:12px">
+      <div style="flex:1;min-width:260px">
+        <span class="g-kicker"><%= r.polymer %></span>
+        <h1 style="font-size:36px;margin:10px 0 6px;font-weight:800;letter-spacing:-.5px"><%= r.grade %></h1>
+        <div class="g-sub" style="font-size:16px">
+          <b style="color:#fff"><%= r.brand %></b>
+          <% if (r.origin) { %> · <%= GT.g_origin %>: <%= r.origin %><% } %>
+          <% if (process_cn) { %> · <%= process_cn %><% } %>
+        </div>
+      </div>
+      <div class="g-hero-cta">
+        <button type="button" class="btn btn-primary" data-rfq="<%= r.grade + ' (' + r.brand + ')' %>"><%= t.form_submit %></button>
+        <a class="btn btn-outline" href="https://wa.me/<%= (settings.whatsapp||'').replace(/[^0-9]/g,'') %>?text=<%= encodeURIComponent('Inquiry: '+r.grade+' ('+r.brand+')') %>" target="_blank" rel="noopener">WhatsApp</a>
+      </div>
+    </div>
+    <div class="g-keystats">
+      <% var KS = [['g_mfr', r.mfr, 'g/10min'], ['g_dens', r.density, 'g/cm³'], ['g_col_tens', r.tensile, 'MPa'], ['g_col_izod', (r.izod!=null?r.izod:r.charpy), 'kJ/m²'], ['g_hdt', r.hdt, '°C']];
+         KS.forEach(function(k){ if (k[1] !== null && k[1] !== undefined) { %>
+        <div class="g-ks"><b><%= k[1] %></b><span><%= GT[k[0]] %> <% if(k[2]){ %><i><%= k[2] %></i><% } %></span></div>
+      <% } }); %>
+      <div class="g-ks st"><span class="g-st <%= r.stock==='in_stock'?'ok':(r.stock==='out'?'no':'mid') %>"><%= stockLabel %></span><span><%= GT.g_col_stock %></span></div>
+    </div>
+  </div>
+</section>
+
+<section class="g-body">
+  <div class="wrap">
+
+    <div class="g-2col">
+
+      <!-- 物性表 -->
+      <div class="g-main">
+        <% if (gd && gd.p1) { %>
+        <div class="g-about">
+          <h2 class="g-h2"><%= gd.about_t %></h2>
+          <p><%= gd.p1 %></p>
+          <p><%= gd.p2 %></p>
+          <p><%= gd.p3 %></p>
+        </div>
+        <% } %>
+        <% if (phys.length) { %>
+        <h2 class="g-h2"><%= GT.g_sec_phys %></h2>
+        <table class="g-dtable"><tbody>
+          <% phys.forEach(function(f){ %>
+          <tr><th><%= f.label %></th><td><%= f.value %> <% if(f.unit){ %><i><%= f.unit %></i><% } %></td><td class="g-cond"><%= f.cond %></td><td class="g-tm"><%= f.tm %></td></tr>
+          <% }); %>
+        </tbody></table>
+        <% } %>
+
+        <% if (mech.length) { %>
+        <h2 class="g-h2"><%= GT.g_sec_mech %></h2>
+        <table class="g-dtable"><tbody>
+          <% mech.forEach(function(f){ %>
+          <tr><th><%= f.label %></th><td><%= f.value %> <% if(f.unit){ %><i><%= f.unit %></i><% } %></td><td class="g-cond"><%= f.cond %></td><td class="g-tm"><%= f.tm %></td></tr>
+          <% }); %>
+        </tbody></table>
+        <% } %>
+
+        <% if (therm.length) { %>
+        <h2 class="g-h2"><%= GT.g_sec_therm %></h2>
+        <table class="g-dtable"><tbody>
+          <% therm.forEach(function(f){ %>
+          <tr><th><%= f.label %></th><td><%= f.value %> <% if(f.unit){ %><i><%= f.unit %></i><% } %></td><td class="g-cond"><%= f.cond %></td><td class="g-tm"><%= f.tm %></td></tr>
+          <% }); %>
+        </tbody></table>
+        <% } %>
+
+        <% if (opt.length) { %>
+        <h2 class="g-h2"><%= GT.g_sec_opt %></h2>
+        <table class="g-dtable"><tbody>
+          <% opt.forEach(function(f){ %>
+          <tr><th><%= f.label %></th><td><%= f.value %> <% if(f.unit){ %><i><%= f.unit %></i><% } %></td><td class="g-cond"><%= f.cond %></td><td class="g-tm"><%= f.tm %></td></tr>
+          <% }); %>
+        </tbody></table>
+        <% } %>
+
+        <% if (r.remark) { %>
+        <div class="g-remark"><%= r.remark %></div>
+        <% } %>
+
+        <% if (r.source_level === 'A') { %>
+        <div class="g-verified" title="<%= GT.g_ver_tip %>"><span class="g-vck">✓</span><%= GT.g_ver_tag %></div>
+        <% } %>
+
+        <% if (pg) { %>
+        <div class="g-pgbox">
+          <h2 class="g-h2"><%= gd.proc_t %></h2>
+          <div class="g-pg">
+            <div class="g-pg-row"><span><%= GT.gd_proc_dry %></span><b><%= pg.dry %></b></div>
+            <div class="g-pg-row"><span><%= GT.gd_proc_dry_h %></span><b><%= pg.dryH %></b></div>
+            <div class="g-pg-row"><span><%= GT.gd_proc_melt %></span><b><%= pg.melt %></b></div>
+            <div class="g-pg-row"><span><%= GT.gd_proc_mold %></span><b><%= pg.mold %></b></div>
+          </div>
+          <% if (pg.warn) { %><p class="g-pg-note">⚠ <%= GT['gd_proc_note_' + pg.warn] %></p><% } %>
+          <p class="g-pg-note"><%= GT.gd_proc_note_gen %></p>
+        </div>
+        <% } %>
+
+        <% if (faq && faq.length) { %>
+        <div class="g-faqbox">
+          <h2 class="g-h2"><%= gd.faq_t %></h2>
+          <div class="g-faq">
+            <% faq.forEach(function(f){ %>
+            <details><summary><%= f.q %></summary><p><%= f.a %></p></details>
+            <% }); %>
+          </div>
+        </div>
+        <% } %>
+
+        <p class="g-note"><%= GT.g_note %></p>
+      </div>
+
+      <!-- 侧栏 -->
+      <aside class="g-side">
+        <% if (feats.length) { %>
+        <div class="g-box">
+          <h3><%= GT.g_col_feat %></h3>
+          <div class="g-tags">
+            <% feats.forEach(function(f){ %><span class="g-tag"><%= f %></span><% }); %>
+          </div>
+        </div>
+        <% } %>
+
+        <% if (r.apps) { %>
+        <div class="g-box">
+          <h3><%= GT.g_col_apps %></h3>
+          <p class="g-apps"><%= r.apps %></p>
+        </div>
+        <% } %>
+
+        <% if (r.certs) { %>
+        <div class="g-box">
+          <h3><%= GT.g_col_cert %></h3>
+          <div class="g-tags">
+            <% String(r.certs).split(';').map(function(s){return s.trim();}).filter(Boolean).forEach(function(c){ %><span class="g-tag ok"><%= c %></span><% }); %>
+          </div>
+        </div>
+        <% } %>
+
+        <div class="g-box">
+          <h3><%= GT.g_commercial %></h3>
+          <div class="g-kv">
+            <div class="g-kv-r"><span><%= GT.g_moq %></span><p><%= r.moq || '1 ton' %></p></div>
+            <div class="g-kv-r"><span><%= GT.g_pack %></span><p><%= r['package'] || '25kg original bag' %></p></div>
+            <div class="g-kv-r"><span><%= GT.g_col_stock %></span><p><span class="g-st <%= r.stock==='in_stock'?'ok':(r.stock==='out'?'no':'mid') %>"><%= stockLabel %></span></p></div>
+          </div>
+        </div>
+
+        <div class="g-box g-box-cta">
+          <h3><%= t.sec_rfq_t %></h3>
+          <p class="g-box-p"><%= t.sec_rfq_s %></p>
+          <button type="button" class="btn btn-primary" style="width:100%;justify-content:center" data-rfq="<%= r.grade + ' (' + r.brand + ')' %>"><%= t.form_submit %></button>
+          <a class="btn btn-outline" style="width:100%;justify-content:center;margin-top:8px" href="https://wa.me/<%= (settings.whatsapp||'').replace(/[^0-9]/g,'') %>?text=<%= encodeURIComponent('Inquiry: '+r.grade+' ('+r.brand+')') %>" target="_blank" rel="noopener"><%= t.whatsapp_text %></a>
+        </div>
+      </aside>
+    </div>
+
+    <!-- 相关牌号 -->
+    <% var REL = { en: 'Related grades', zh: '相关牌号', ru: 'Похожие марки', vi: 'Mã tương tự', th: 'เกรดที่เกี่ยวข้อง', id: 'Grade serupa' }[lang] || 'Related grades'; %>
+    <% if (related.length) { %>
+    <div class="g-rel">
+      <h2 class="g-h2"><%= REL %></h2>
+      <div class="g-rel-grid">
+        <% related.forEach(function(x){ %>
+        <a class="g-rel-card" href="/<%= lang %>/grade/<%= x.slug %>">
+          <b><%= x.grade %></b>
+          <span><%= x.brand %></span>
+          <em><%= x.polymer %><% if(x.mfr!=null){ %> · MFR <%= x.mfr %><% } %></em>
+        </a>
+        <% }); %>
+      </div>
+    </div>
+    <% } %>
+
+    <p class="g-crumb" style="margin-top:26px">
+      <a href="/<%= lang %>/grades">← <%= GT.g_title %></a>
+      <% if (catSlug) { %> · <a href="/<%= lang %>/category/<%= catSlug %>"><%= catName %></a><% } %>
+    </p>
+
+  </div>
+</section>
+
+<!-- 询价弹窗 -->
+<div class="rfq-modal" id="rfqModal" aria-hidden="true">
+  <div class="rm-bg" data-close></div>
+  <div class="rm-box" role="dialog" aria-modal="true">
+    <div class="rm-hd">
+      <div><span class="kicker"><%= t.sec_rfq_k %></span><b><%= t.sec_rfq_t %></b></div>
+      <button class="rm-x" type="button" data-close aria-label="Close">&times;</button>
+    </div>
+    <form id="rmForm" data-lang="<%= lang %>">
+      <input type="hidden" name="product" id="rmProduct" value="">
+      <div class="rm-prod" id="rmProdTag"></div>
+      <div class="frow">
+        <div><label><%= t.form_name %> *</label><input name="name" required></div>
+        <div><label><%= t.form_email %> *</label><input name="email" type="email" required></div>
+      </div>
+      <div class="frow">
+        <div><label><%= t.form_phone %></label><input name="phone"></div>
+        <div><label><%= t.form_company %></label><input name="company"></div>
+      </div>
+      <div><label><%= t.form_message %> *</label><textarea name="message" required></textarea></div>
+      <div class="fmsg" id="rmMsg"></div>
+      <div style="display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap">
+        <span class="fnote"><%= t.form_note %></span>
+        <button class="btn btn-primary" type="submit"><%= t.form_submit %></button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<script type="application/ld+json">
+<%= JSON.stringify(jsonld) %>
+</script>
+
+<script>
+(function(){
+  var modal = document.getElementById('rfqModal');
+  var form = document.getElementById('rmForm');
+  var prodTag = document.getElementById('rmProdTag');
+  var prodInput = document.getElementById('rmProduct');
+  var msg = document.getElementById('rmMsg');
+  function open(tag){
+    prodTag.textContent = tag; prodInput.value = tag;
+    if (!form.querySelector('textarea').value) {
+      form.querySelector('textarea').value = tag + ' — ' + (form.getAttribute('data-lang') === 'zh' ? '请报价（数量：），谢谢。' : 'Please send me a quotation. Quantity: ');
+    }
+    modal.classList.add('open'); document.body.style.overflow = 'hidden';
+    var f = form.querySelector('input[name=name]'); if (f) f.focus();
+  }
+  function close(){ modal.classList.remove('open'); document.body.style.overflow = ''; msg.className = 'fmsg'; msg.textContent = ''; }
+  document.querySelectorAll('[data-rfq]').forEach(function(b){
+    b.addEventListener('click', function(e){ e.preventDefault(); open(b.getAttribute('data-rfq')); });
+  });
+  modal.querySelectorAll('[data-close]').forEach(function(el){ el.addEventListener('click', close); });
+  document.addEventListener('keydown', function(e){ if (e.key === 'Escape') close(); });
+  form.addEventListener('submit', function(e){
+    e.preventDefault();
+    var fd = new FormData(form);
+    var payload = { name: fd.get('name'), email: fd.get('email'), phone: fd.get('phone'), company: fd.get('company'),
+      message: fd.get('message'), product: fd.get('product'), lang: form.getAttribute('data-lang') || 'en' };
+    if (!payload.name || !payload.message) { msg.className = 'fmsg err'; msg.textContent = 'Please fill in the required fields.'; return; }
+    fetch('/api/inquiry', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) })
+      .then(function(r){ return r.json(); })
+      .then(function(d){
+        if (d.ok) { msg.className = 'fmsg ok'; msg.textContent = 'Thank you! Your inquiry has been received.'; form.reset(); prodInput.value = prodTag.textContent; }
+        else { msg.className = 'fmsg err'; msg.textContent = 'Error, please try again.'; }
+      })
+      .catch(function(){ msg.className = 'fmsg err'; msg.textContent = 'Network error, please try again.'; });
+  });
+})();
+</script>
+
+<%- include('partials/footer-v2') %>

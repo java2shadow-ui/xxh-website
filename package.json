@@ -1,0 +1,13 @@
+{
+  "name": "xianxunhe-website",
+  "version": "1.0.0",
+  "description": "Xianxunhe New Materials multilingual trade website",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "ejs": "^7.0.2",
+    "express": "^5.3.0"
+  }
+}

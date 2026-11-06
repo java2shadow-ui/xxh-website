@@ -1,0 +1,20 @@
+<%- include('partials/header-v2', { path: 'news', langBase: '/news', pageCss: ['/static/css/style.css?v=20261024b','/static/css/pages-v2.css?v=20261102a'] }) %>
+
+<section style="padding:48px 0 64px">
+  <div class="wrap">
+    <span class="kicker"><%= t.sec_news_k %></span>
+    <h1 class="page-h1"><%= t.sec_news_t %></h1>
+    <% if(!news.length){ %><p class="sub"><%= t.no_news %></p><% } %>
+    <div class="news-grid">
+      <% news.forEach(n=>{ %>
+        <div class="news-card">
+          <span class="date"><%= n.date %></span>
+          <h3><%= lang==='zh'?n.title_zh:n.title_en %></h3>
+          <p><%= lang==='zh'?n.body_zh:n.body_en %></p>
+        </div>
+      <% }); %>
+    </div>
+  </div>
+</section>
+
+<%- include('partials/footer-v2') %>

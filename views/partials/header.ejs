@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="<%= lang %>">
+<head>
+<meta charset="UTF-8">
+<link rel="icon" type="image/svg+xml" href="/assets/favicon.svg">
+<link rel="apple-touch-icon" href="/assets/favicon-180.png">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title><%= pageTitle || t.site_name || (settings.site_name_en + ' — ' + t.hero_title) %></title>
+<meta name="description" content="<%= pageDesc || t.hero_sub %>">
+<link rel="canonical" href="<%= canonical || ('https://www.nbxxh.com/' + lang + '/' + (canonPath || '')) %>">
+<% if (langAlts) { Object.keys(langAlts).forEach(function(l){ %><link rel="alternate" hreflang="<%= l %>" href="<%= langAlts[l] %>"><% }); } %>
+<meta property="og:title" content="<%= pageTitle || t.site_name || settings.site_name_en %>">
+<meta property="og:description" content="<%= pageDesc || t.hero_sub %>">
+<meta property="og:type" content="<%= ogType || 'website' %>">
+<meta property="og:url" content="<%= canonical || ('https://www.nbxxh.com/' + lang + '/' + (canonPath || '')) %>">
+<% if (ogImage) { %><meta property="og:image" content="<%= ogImage %>"><% } %>
+<link rel="stylesheet" href="/static/css/style.css?v=20261024b">
+<% if (extraCss) { %><link rel="stylesheet" href="<%= extraCss %>"><% } %>
+</head>
+<body>
+<%- include('icons') %>
+<div class="topbar">
+  <div class="wrap">
+    <a href="mailto:<%= settings.email %>"><%= settings.email %></a>
+    <div class="tb-r">
+      <a href="/<%= lang %>/contact"><%= t.nav_contact %></a>
+      <a href="tel:<%= (settings.phone||'').replace(/\s/g,'') %>"><%= settings.phone %></a>
+    </div>
+  </div>
+</div>
+<header class="site" id="siteHeader">
+  <div class="wrap navbar">
+    <a class="logo" href="/<%= lang %>">
+      <span class="mark"><svg viewBox="0 0 200 200"><g stroke="#E8EFF7" stroke-width="11" stroke-linecap="round"><line x1="100" y1="100" x2="36" y2="36"/><line x1="100" y1="100" x2="164" y2="36"/><line x1="100" y1="100" x2="36" y2="164"/><line x1="100" y1="100" x2="164" y2="164"/></g><g fill="#E8EFF7"><circle cx="67" cy="67" r="10.5"/><circle cx="133" cy="67" r="10.5"/><circle cx="67" cy="133" r="10.5"/><circle cx="133" cy="133" r="10.5"/></g><g fill="#FFFFFF"><circle cx="34" cy="34" r="15.5"/><circle cx="166" cy="34" r="15.5"/><circle cx="34" cy="166" r="15.5"/><circle cx="166" cy="166" r="15.5"/></g><circle cx="100" cy="100" r="18" fill="#5FA8EF"/></svg></span>
+      <span class="logo-full"><%= settings.site_name_en %><small><%= t.hero_badge %></small></span>
+      <span class="logo-short">Xianxunhe<small><%= t.hero_badge %></small></span>
+    </a>
+    <nav class="main" id="nav">
+      <a href="/<%= lang %>" class="<%= path==='home'?'active':'' %>"><%= t.nav_home %></a>
+      <a href="/<%= lang %>/products" class="<%= path==='products'?'active':'' %>"><%= t.nav_products %></a>
+      <a href="/<%= lang %>/grades" class="<%= path==='grades'?'active':'' %>"><%= t.nav_grades %></a>
+      <a href="/<%= lang %>/about" class="<%= path==='about'?'active':'' %>"><%= t.nav_about %></a>
+      <a href="/<%= lang %>/news" class="<%= path==='news'?'active':'' %>"><%= t.nav_news %></a>
+      <a href="/<%= lang %>/contact" class="<%= path==='contact'?'active':'' %>"><%= t.nav_contact %></a>
+    </nav>
+    <div class="nav-tools">
+      <div class="lang-switch" id="langSwitch">
+        <button type="button" onclick="document.getElementById('langSwitch').classList.toggle('open')">
+          <svg width="15" height="15" viewBox="0 0 24 24"><use href="#i-globe"/></svg>
+          <%= (LANGS.find(l=>l.code===lang)||{}).name %>
+          <span style="font-size:10px">&#9662;</span>
+        </button>
+        <div class="lang-menu">
+          <% LANGS.forEach(l=>{ %>
+            <a href="#" data-lang-href="<%= l.code %>" class="<%= l.code===lang?'cur':'' %>"><%= l.name %><span style="font-size:11px;color:#8A98AA"><%= l.flag %></span></a>
+          <% }); %>
+        </div>
+      </div>
+      <a class="btn btn-primary nav-cta" href="/<%= lang %>/contact"><%= t.nav_quote %></a>
+      <button class="burger" onclick="document.getElementById('nav').classList.toggle('open')">&#9776;</button>
+    </div>
+  </div>
+</header>
+<script>
+(function(){
+  var hdr=document.getElementById('siteHeader');
+  window.addEventListener('scroll',function(){
+    if(hdr)hdr.classList.toggle('scrolled',window.scrollY>36);
+  },{passive:true});
+})();
+</script>
+<script>
+(function(){
+  var m=document.querySelector('.lang-menu');
+  if(m){m.addEventListener('click',function(e){
+    var a=e.target.closest('a[data-lang-href]');
+    if(!a)return;
+    e.preventDefault();
+    var code=a.getAttribute('data-lang-href');
+    var cur=location.pathname.split('/')[1];
+    location.href=location.pathname.replace('/'+cur,'/'+code)+location.search;
+  });}
+  document.addEventListener('click',function(e){
+    var ls=document.getElementById('langSwitch');
+    if(ls&&!ls.contains(e.target))ls.classList.remove('open');
+  });
+})();
+</script>

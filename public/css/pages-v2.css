@@ -1,0 +1,116 @@
+/* ============================================================
+   pages-v2.css — shared restyle layer for products / grade /
+   contact / about / news / product / 404 into the new
+   slate/sky design language (loaded AFTER style.css)
+   ============================================================ */
+body.hv2{background:var(--s50);font-family:var(--jk);color:var(--s900)}
+body.hv2 h1,body.hv2 h2,body.hv2 h3,body.hv2 h4{color:var(--s900);letter-spacing:-.01em}
+body.hv2 .wrap{font-family:var(--jk)}
+
+/* kicker + section headers */
+body.hv2 .kicker{font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--s500);background:none;border:0;padding:0;display:inline-block}
+body.hv2 .sub{color:var(--s600)}
+body.hv2 .center{text-align:center}
+
+/* buttons */
+body.hv2 .btn{display:inline-flex;align-items:center;justify-content:center;gap:7px;font-family:var(--jk);font-weight:700;font-size:13px;border-radius:6px;padding:11px 18px;transition:.15s;cursor:pointer;text-decoration:none;min-height:40px}
+body.hv2 .btn-primary{background:var(--s900);color:#fff;border:1px solid var(--s900)}
+body.hv2 .btn-primary:hover{background:var(--s800);transform:none;box-shadow:none}
+body.hv2 .btn-outline{background:#fff;color:var(--s700);border:1px solid var(--s300)}
+body.hv2 .btn-outline:hover{border-color:var(--s400);background:var(--s50);color:var(--s900)}
+
+/* forms (inline rfqform) */
+body.hv2 .rfqform label{font-family:var(--jk);font-size:11.5px;font-weight:600;color:var(--s500)}
+body.hv2 .rfqform input,body.hv2 .rfqform textarea{font-family:var(--jk);font-size:14px;border:1px solid var(--s300);border-radius:7px;background:var(--s50);transition:.15s}
+body.hv2 .rfqform input:focus,body.hv2 .rfqform textarea:focus{border-color:var(--s800);background:#fff;box-shadow:none}
+body.hv2 .fnote{font-family:var(--jk);color:var(--s500)}
+body.hv2 .fmsg{font-family:var(--jk)}
+
+/* back link */
+body.hv2 .back-link{font-family:var(--jk);font-size:13px;font-weight:600;color:var(--sky);text-decoration:none}
+body.hv2 .back-link:hover{text-decoration:underline}
+
+/* category / brand cards (products browse + brands modes) */
+body.hv2 .cats-grid{gap:20px}
+body.hv2 .cat-card{background:#fff;border:1px solid var(--s200);border-radius:10px;overflow:hidden;transition:.18s;box-shadow:0 1px 3px rgba(15,23,42,.04)}
+body.hv2 .cat-card:hover{border-color:var(--s400);transform:translateY(-2px);box-shadow:0 8px 22px rgba(15,23,42,.08)}
+body.hv2 .cat-band{height:120px;overflow:hidden;background:var(--s100)}
+body.hv2 .cat-band img{width:100%;height:100%;object-fit:cover}
+body.hv2 .cat-body{padding:16px 18px;font-family:var(--jk)}
+body.hv2 .cat-body h3{font-size:17px;font-weight:800;margin:0 0 4px}
+body.hv2 .cat-body p{color:var(--s500);font-size:12.5px;margin:0 0 6px}
+body.hv2 .cat-count{font-family:var(--mo);font-size:11px;color:var(--sky);font-weight:600;margin:0}
+body.hv2 .cat-info{font-family:var(--jk);color:var(--s600)}
+
+/* brand search bar */
+body.hv2 .b-search{border:1px solid var(--s300);border-radius:7px;background:var(--s50);margin-top:18px}
+body.hv2 .b-search:focus-within{border-color:var(--s800);background:#fff;box-shadow:none}
+body.hv2 .b-search input{font-family:var(--jk);font-size:14px}
+body.hv2 .b-search-n{background:var(--s900)}
+
+/* grade table (brand page) */
+body.hv2 .gtable-wrap{border:1px solid var(--s200);border-radius:10px;box-shadow:0 1px 3px rgba(15,23,42,.05);background:#fff}
+body.hv2 .gtable th{background:var(--s50);color:var(--s500);font-family:var(--jk);border-bottom:1px solid var(--s200)}
+body.hv2 .gtable td{border-bottom:1px solid var(--s100);font-family:var(--jk)}
+body.hv2 .gtable tbody tr:hover{background:#f0f9ff}
+body.hv2 .gt-grade{font-family:var(--jk);font-weight:800;color:var(--s900)}
+body.hv2 .gt-grade:hover{color:var(--sky)}
+body.hv2 .gt-app{font-family:var(--jk);color:var(--s500)}
+body.hv2 .g-mini{border:1px solid var(--s200);border-radius:6px;font-family:var(--jk);font-weight:600;color:var(--s700)}
+body.hv2 .g-mini:hover{border-color:var(--s400);background:var(--s50)}
+body.hv2 .g-mini.pri{background:var(--s900);border-color:var(--s900);color:#fff;font-weight:700}
+body.hv2 .g-mini.pri:hover{background:var(--s800)}
+body.hv2 .g-mini.wa{color:#047857;border-color:#a7f3d0}
+body.hv2 .g-mini.wa:hover{background:#ecfdf5;border-color:#047857}
+
+/* chips */
+body.hv2 .chips{gap:8px}
+body.hv2 .chip{border:1px solid var(--s200);background:var(--s100);border-radius:6px;padding:7px 13px;font-size:12px;font-weight:500;color:var(--s600);font-family:var(--jk)}
+body.hv2 .chip:hover{border-color:var(--s300);color:var(--s900)}
+body.hv2 .chip b{color:var(--s900)}
+
+/* product cards (related / detail) */
+body.hv2 .prod-grid{gap:20px}
+body.hv2 .prod-card{background:#fff;border:1px solid var(--s200);border-radius:10px;overflow:hidden;transition:.18s}
+body.hv2 .prod-card:hover{border-color:var(--s400)}
+body.hv2 .prod-card .ph{background:var(--s100)}
+body.hv2 .prod-card .bd{padding:16px 18px;font-family:var(--jk)}
+body.hv2 .prod-card h3{font-size:15.5px;font-weight:800;margin:6px 0 4px}
+body.hv2 .prod-card p{color:var(--s500);font-size:12.5px}
+body.hv2 .cat-tag{font-family:var(--jk);font-size:11px;font-weight:700;color:#075985;background:#e0f2fe;border-radius:4px;padding:2px 7px}
+
+/* contact page */
+body.hv2 .contact-grid{gap:36px}
+body.hv2 .why .item{background:#fff;border:1px solid var(--s200);border-radius:10px;padding:18px}
+body.hv2 .why .ic{background:var(--s100);border-radius:8px;color:var(--sky)}
+body.hv2 .why b{font-family:var(--jk);color:var(--s900)}
+
+/* about page */
+body.hv2 .about-grid{gap:36px}
+body.hv2 .about-p p{color:var(--s600);font-family:var(--jk);line-height:1.75}
+body.hv2 .brand-chip{font-family:var(--jk);background:#fff;border:1px solid var(--s200);border-radius:6px;color:var(--s700)}
+body.hv2 .num{font-family:var(--mo);color:var(--s900);font-weight:800}
+
+/* news */
+body.hv2 .news-grid{gap:20px}
+body.hv2 .news-card{background:#fff;border:1px solid var(--s200);border-radius:10px;padding:20px;font-family:var(--jk)}
+body.hv2 .news-card .date{font-family:var(--mo);font-size:11px;color:var(--sky);font-weight:600}
+body.hv2 .news-card h3{font-size:16px;font-weight:800}
+body.hv2 .news-card p{color:var(--s600);font-size:13px;line-height:1.7}
+
+/* product detail */
+body.hv2 .pd{background:#fff;border:1px solid var(--s200);border-radius:10px;overflow:hidden}
+body.hv2 .meta{font-family:var(--jk);color:var(--s500)}
+body.hv2 .desc{color:var(--s600);font-family:var(--jk)}
+body.hv2 .rfq-grid{gap:24px}
+body.hv2 .rfq .item{background:var(--s50);border:1px solid var(--s200);border-radius:10px;padding:16px}
+body.hv2 .rfq .ic{color:var(--sky)}
+body.hv2 .placeholder{background:var(--s100);color:var(--s400)}
+
+/* warehouse/media, misc */
+body.hv2 .wa-inline{font-family:var(--jk);color:var(--s600)}
+body.hv2 .lb-overlay img{border-radius:10px}
+
+/* 页面主标题：about/contact/news/products/品类 三类页面的 h1（此前是 h2，缺 H1） */
+body.hv2 .page-h1{font-size:28px;line-height:1.28;font-weight:800;margin:0 0 10px;color:var(--s900);letter-spacing:-.015em}
+@media(max-width:640px){body.hv2 .page-h1{font-size:22px}}

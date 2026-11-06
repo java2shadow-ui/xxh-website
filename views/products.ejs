@@ -1,0 +1,317 @@
+<%- include('partials/header-v2', { path: 'products', langBase: '/products', pageCss: ['/static/css/style.css?v=20261024b','/static/css/pages-v2.css?v=20261102a'] }) %>
+
+<% var PELLET={abs:'white',pc:'blue','pc-abs':'blue',pa6:'ivory',pa66:'ivory',pa12:'ivory',pa46:'ivory',pom:'white',ppsu:'blue',poe:'clear',eva:'milky',surlyn:'white',pp:'milky',hdpe:'milky',ldpe:'milky',lldpe:'milky',gpps:'clear',hips:'white',modified:'dark',pmma:'clear',pvc:'white',pet:'clear',pbt:'ivory',tpu:'white',tpe:'milky',pps:'dark',lcp:'clear',bio:'milky'}; %>
+<% var BZ = { 'CHIMEI':'奇美','CHIMEI Zhenjiang':'镇江奇美','LG Chem':'LG化学','LG Ningbo':'LG甬兴','LG Chem Ningbo':'LG化学宁波','Formosa':'台化','Formosa Ningbo':'台化宁波','Sinopec':'中石化','ZPC':'浙石化','Maoming':'茂名','Maoming Petrochemical':'茂名石化','Yanshan':'燕山','Yangzi':'扬子','Qilu':'齐鲁','Daqing':'大庆','Jilin':'吉林','Baofeng Energy':'宝丰能源','Shenhua':'神华','Yanchang':'延长','Donghua Energy':'东华能源','CNOOC':'中海油','Shanghai Petrochemical':'上海石化','Dow':'陶氏','BASF':'巴斯夫','BASF-YPC':'扬子巴斯夫','BASF Shanghai':'巴斯夫上海','Covestro':'科思创','Covestro Shanghai':'科思创上海','SABIC':'沙伯','SABIC Shanghai':'沙伯上海','DuPont':'杜邦','DuPont Shenzhen':'杜邦深圳','Polyplastics':'宝理','Polyplastics Nantong':'宝理南通','Mitsubishi':'三菱','Mitsubishi Shanghai':'三菱上海','Teijin':'帝人','Teijin Shanghai':'帝人上海','Toray':'东丽','Celanese':'塞拉尼斯','Evonik':'赢创','Evonik Shanghai':'赢创上海','Total Corbion':'道达尔科碧恩','Hisun':'海正','Kingfa':'金发','Dawn Polymer':'道恩','Huafeng':'华峰','USI':'台聚','Wankai':'万凯','Wankai Hainan':'万凯海南','Yisheng':'逸盛','Yisheng Hainan':'逸盛海南','Sanfangxiang':'三房巷','Sanfangxiang Jiangyin':'三房巷江阴','Changchun':'长春','Changchun Changshu':'长春常熟','Reliance':'信诚','Borealis':'北欧化工','Borouge':'博禄','LyondellBasell':'利安德巴赛尔','ExxonMobil':'埃克森美孚','Samsung Total':'三星道达尔','Guohan':'国亨','Guohan Ningbo':'国亨宁波','Jihua':'吉化','Jihua Jilin':'吉化吉林','Jihua Shanghai':'吉化上海','Gaoqiao':'高桥','Gaoqiao Shanghai':'高桥上海','Ascend':'奥升德','Asahi Kasei':'旭化成','UBE':'宇部','UBE Shanghai':'宇部上海','Yueyang':'岳阳石化','Baling':'巴陵','Yuntianhua':'云天化','Yuntianhua Chongqing':'云天化重庆','Xinjiang Tianye':'新疆天业','Zhongtai':'中泰','SECCO':'赛科','SECCO Shanghai':'赛科上海','Lotte':'乐天','Huntsman':'亨斯迈','Recycled':'再生料','Compounded':'改性料','SK':'SK','NatureWorks':'NatureWorks' }; %>
+<% var brandName = function(b){
+     if (b && typeof b === 'object') return lang==='zh' ? (b.name_zh || BZ[b.brand] || b.brand) : (b.brand);
+     return lang==='zh' ? (BZ[b]||b) : b;
+   }; %>
+
+<section style="padding:48px 0 64px">
+  <div class="wrap">
+
+    <% if (mode === 'browse') { %>
+
+      <!-- ====== 一级：全部产品 / 分类卡墙 ====== -->
+      <div>
+        <span class="kicker"><%= t.sec_products_k %></span>
+        <h1 class="page-h1"><%= t.all_products %></h1>
+        <p class="sub"><%= t.sec_products_s %></p>
+      </div>
+
+      <div class="cats-grid" style="margin-top:26px">
+        <% cats.forEach(c=>{ %>
+          <a class="cat-card" href="/<%= lang %>/category/<%= c.slug %>">
+            <div class="cat-band"><img src="/assets/pellets/<%= PELLET[c.slug]||'white' %>.jpg" alt="<%= c.name_en %>" loading="lazy"></div>
+            <div class="cat-body">
+              <h3><%= lang==='zh'?c.name_zh:c.name_en %></h3>
+              <p><%= (c.brands||'').split(',').slice(0,3).join(' · ') %></p>
+              <p class="cat-count"><%= prods.filter(p=>p.cat_slug===c.slug).length %> SKUs</p>
+            </div>
+          </a>
+        <% }); %>
+      </div>
+
+      <div>
+        <h3 class="grid-divider"><%= t.all_products %> <span class="sku-total"><%= prods.length %> SKUs</span></h3>
+      </div>
+
+      <div class="prod-grid grouped">
+        <% var GR = []; var cur = null;
+           prods.forEach(function(p){ if(!cur || cur.brand !== p.brand){ cur = { brand: p.brand, items: [] }; GR.push(cur); } cur.items.push(p); }); %>
+        <% GR.forEach(function(g){ %>
+          <div class="brand-group">
+            <div class="bg-head">
+              <span class="bg-name"><%= brandName(g.brand) %></span>
+              <span class="bg-en"><%= g.brand %></span>
+              <span class="bg-n"><%= g.items.length %></span>
+            </div>
+            <div class="bg-cards">
+              <% g.items.forEach(function(p){ %>
+                <a class="prod-card" href="/<%= lang %>/products/<%= p.slug %>">
+                  <div class="ph">
+                    <% if(p.image){ %><img src="/uploads/<%= p.image %>" alt="<%= p.name_en %>" loading="lazy">
+                    <% } else { %><svg viewBox="0 0 24 24"><use href="#i-pellets"/></svg><% } %>
+                  </div>
+                  <div class="bd">
+                    <span class="cat-tag"><%= p.grade || p.brand %></span>
+                    <h3><%= lang==='zh'?p.name_zh:p.name_en %></h3>
+                    <p><%= lang==='zh'?p.desc_zh:p.desc_en %></p>
+                  </div>
+                </a>
+              <% }); %>
+            </div>
+          </div>
+        <% }); %>
+      </div>
+
+    <% } else if (mode === 'brands') { %>
+
+      <!-- ====== 二级：分类 → 厂家选择页 ====== -->
+      <div>
+        <a href="/<%= lang %>/products" class="back-link">&larr; <%= lang==='zh'?'全部产品':'All products' %></a>
+        <h1 class="page-h1"><%= lang==='zh'?cat.name_zh:cat.name_en %></h1>
+        <p class="sub"><%= lang==='zh'?(cat.desc_zh||''):(cat.desc_en||'') %></p>
+        <div class="cat-info">
+          <div><b><%= t.brand_label %></b><span><%= cat.brands || '—' %></span></div>
+          <div><b><%= t.app_label %></b><span><%= lang==='zh'?(cat.apps_zh||''):(cat.apps_en||'') %></span></div>
+        </div>
+      </div>
+
+      <div style="margin-top:22px">
+        <h3 class="grid-divider"><%= lang==='zh'?'选择厂家':'Choose a manufacturer' %>
+          <span class="sku-total"><%= brands.length %> <%= lang==='zh'?'家':'brands' %> · <%= brands.reduce(function(s,b){return s+b.count},0) %> SKUs</span></h3>
+      </div>
+
+      <div class="b-search">
+        <input id="brandSearch" type="search" placeholder="<%= lang==='zh'?'搜索厂家：如 奇美 / LG / CHIMEI':'Search manufacturer: CHIMEI / LG' %>" autocomplete="off">
+        <span class="b-search-n" id="brandCount"><%= brands.length %></span>
+      </div>
+
+      <div class="cats-grid" style="grid-template-columns:repeat(auto-fill,minmax(250px,1fr))" id="brandWall">
+        <% brands.forEach(function(b){ %>
+          <a class="cat-card" href="/<%= lang %>/category/<%= cat.slug %>/<%= b.slug %>" data-name="<%= (brandName(b.brand)+' '+b.brand).toLowerCase() %>">
+            <div class="cat-band"><img src="<%= b.image ? '/uploads/'+b.image : '/assets/pellets/'+(PELLET[cat.slug]||'white')+'.jpg' %>" alt="<%= b.brand %>" loading="lazy" onerror="this.onerror=null;this.src='/assets/pellets/<%= PELLET[cat.slug]||'white' %>.jpg'"></div>
+            <div class="cat-body">
+              <h3><%= brandName(b) %></h3>
+              <p><%= b.brand %></p>
+              <p class="cat-count"><%= b.count %> <%= lang==='zh'?'个型号':'grades' %></p>
+            </div>
+          </a>
+        <% }); %>
+      </div>
+      <div class="g-empty" id="brandEmpty" style="display:none;margin-top:16px">
+        <h3><%= lang==='zh'?'没找到该厂家':'No manufacturer found' %></h3>
+        <p><%= lang==='zh'?'我们供应更多品牌牌号，直接联系我们询价。':'We supply more brands — contact us for a quick quote.' %></p>
+        <a class="btn btn-outline" href="https://wa.me/<%= (settings.whatsapp||'').replace(/[^0-9]/g,'') %>" target="_blank" rel="noopener"><%= t.whatsapp_text %></a>
+      </div>
+
+      <% if (!brands.length) { %>
+        <div style="background:var(--white);border:1px dashed var(--line);border-radius:14px;padding:44px;text-align:center;margin-top:10px">
+          <h3 style="margin-bottom:8px"><%= lang==='zh'?'该分类产品整理中':'Products being updated' %></h3>
+          <p style="color:var(--muted);margin-bottom:18px"><%= lang==='zh'?'我们供应该品类全部主流牌号，欢迎直接联系我们询价。':'We supply all mainstream grades in this category — contact us for a quick quotation.' %></p>
+          <a class="btn btn-primary" href="https://wa.me/<%= (settings.whatsapp||'').replace(/[^0-9]/g,'') %>" target="_blank" rel="noopener"><%= t.whatsapp_text %></a>
+        </div>
+      <% } %>
+
+    <% } else { %>
+
+      <!-- ====== 三级：分类/厂家 → 型号列表页（物性表，无图） ====== -->
+      <div>
+        <a href="/<%= lang %>/category/<%= cat.slug %>" class="back-link">&larr; <%= lang==='zh'?cat.name_zh:cat.name_en %></a>
+        <h1 class="page-h1"><%= brandName(brand) %></h1>
+        <p class="sub"><%= brand.brand %> · <%= (cat.slug||'').toUpperCase() %> · <%= brand.count %> <%= lang==='zh'?'个型号':'grades' %></p>
+      </div>
+
+      <div class="b-search">
+        <input id="gradeSearch" type="search" placeholder="<%= lang==='zh'?'搜索牌号：如 PA-757 / 757K':'Search grade: PA-757 / 757K' %>" autocomplete="off">
+        <span class="b-search-n" id="gradeCount"><%= brand.items.length %></span>
+      </div>
+
+      <div class="gtable-wrap" id="gradeList">
+        <table class="gtable">
+          <thead>
+            <tr>
+              <th><%= lang==='zh'?'牌号':'Grade' %></th>
+              <th><%= (GL.mfr&&GL.mfr.l)||'MFR' %> <i>g/10min</i></th>
+              <th><%= (GL.density&&GL.density.l)||'Density' %> <i>g/cm³</i></th>
+              <th><%= (GL.tensile&&GL.tensile.l)||'Tensile' %> <i>MPa</i></th>
+              <th><%= (GL.izod&&GL.izod.l)||'Izod' %> <i>kJ/m²</i></th>
+              <th><%= (GL.hdt&&GL.hdt.l)||'HDT' %> <i>°C</i></th>
+              <th><%= lang==='zh'?'货源':'Stock' %></th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody>
+            <% brand.items.forEach(function(p){
+                 var d = p.ds || {};
+                 var st = d.stock || '';
+                 var stL = (GL._stock && GL._stock[st] && GL._stock[st][lang]) || (GL._stock && GL._stock[st] && GL._stock[st].en) || '—';
+                 var stC = st === 'in_stock' ? 'ok' : (st === 'out' ? 'no' : 'mid');
+            %>
+              <tr data-name="<%= ((p.grade||'')+' '+(p.name_en||'')+' '+(p.name_zh||'')).toLowerCase() %>">
+                <td>
+                  <a class="gt-grade" href="/<%= lang %>/<%= p.grade_slug ? ('grade/'+p.grade_slug) : ('products/'+p.slug) %>"><%= p.grade || (lang==='zh'?p.name_zh:p.name_en) %></a>
+                  <span class="gt-app"><%= lang==='zh'?p.desc_zh:p.desc_en %></span>
+                </td>
+                <td class="num" data-l="<%= (GL.mfr&&GL.mfr.l)||'MFR' %>"><%= (d.mfr!==null&&d.mfr!==undefined)?d.mfr:'—' %><% if(d.mfr_cond){ %><i><%= d.mfr_cond %></i><% } %></td>
+                <td class="num" data-l="<%= (GL.density&&GL.density.l)||'Density' %>"><%= d.density!=null?d.density:'—' %></td>
+                <td class="num" data-l="<%= (GL.tensile&&GL.tensile.l)||'Tensile' %>"><%= d.tensile!=null?d.tensile:'—' %></td>
+                <td class="num" data-l="<%= (GL.izod&&GL.izod.l)||'Izod' %>"><%= (d.izod!=null?d.izod:(d.charpy!=null?d.charpy:'—')) %></td>
+                <td class="num" data-l="<%= (GL.hdt&&GL.hdt.l)||'HDT' %>"><%= d.hdt!=null?d.hdt:'—' %></td>
+                <td><span class="g-st <%= stC %>"><%= stL %></span></td>
+                <td class="gt-act">
+                  <a class="g-mini pri" href="#" data-rfq="<%= ((p.grade||p.name_en)+' ('+brand.brand+')').replace(/\"/g,'') %>"><%= lang==='zh'?'在线询价':'Quote' %></a>
+                  <a class="g-mini wa" href="https://wa.me/<%= (settings.whatsapp||'').replace(/[^0-9]/g,'') %>?text=<%= encodeURIComponent('Inquiry: '+(p.grade||p.name_en)+' ('+brand.brand+')') %>" target="_blank" rel="noopener" title="WhatsApp">WA</a>
+                </td>
+              </tr>
+            <% }); %>
+          </tbody>
+        </table>
+      </div>
+      <p class="g-note"><%= lang==='zh'?'以上为原厂典型值，仅供参考；以实际发货批次 COA 为准。':'Typical values from manufacturer data sheets, for reference only; the COA of the shipped lot prevails.' %></p>
+
+      <div class="g-empty" id="gradeEmpty" style="display:none">
+        <h3><%= lang==='zh'?'没找到该牌号':'No grade found' %></h3>
+        <p><%= lang==='zh'?'我们供应该厂家更多牌号，欢迎直接询价。':'We supply more grades from this manufacturer — just ask us.' %></p>
+        <a class="btn btn-outline" href="https://wa.me/<%= (settings.whatsapp||'').replace(/[^0-9]/g,'') %>" target="_blank" rel="noopener"><%= t.whatsapp_text %></a>
+      </div>
+
+      <% var others = brands.filter(function(b){ return b.brand !== brand.brand; }); %>
+      <% if (others.length) { %>
+        <div style="margin-top:44px">
+          <h4 style="font-size:15px;margin-bottom:12px"><%= lang==='zh'?'该分类其他厂家':'Other manufacturers in this category' %></h4>
+          <div class="chips">
+            <% others.forEach(function(b){ %>
+              <a class="chip" href="/<%= lang %>/category/<%= cat.slug %>/<%= b.slug %>"><%= brandName(b.brand) %> <b style="color:var(--blue)"><%= b.count %></b></a>
+            <% }); %>
+          </div>
+        </div>
+      <% } %>
+
+      <script>
+      (function(){
+        var inp = document.getElementById('gradeSearch');
+        var rows = document.querySelectorAll('#gradeList tbody tr');
+        var cnt = document.getElementById('gradeCount');
+        var emp = document.getElementById('gradeEmpty');
+        var wrap = document.getElementById('gradeList');
+        if (inp) inp.addEventListener('input', function(){
+          var q = inp.value.trim().toLowerCase();
+          var n = 0;
+          rows.forEach(function(r){
+            var ok = !q || (r.getAttribute('data-name')||'').indexOf(q) > -1;
+            r.style.display = ok ? '' : 'none';
+            if (ok) n++;
+          });
+          if (cnt) cnt.textContent = n;
+          wrap.style.display = n ? '' : 'none';
+          emp.style.display = n ? 'none' : '';
+        });
+        var bi = document.getElementById('brandSearch');
+        if (bi) {
+          var cards = document.querySelectorAll('#brandWall .cat-card');
+          var bc = document.getElementById('brandCount');
+          var be = document.getElementById('brandEmpty');
+          bi.addEventListener('input', function(){
+            var q = bi.value.trim().toLowerCase();
+            var n = 0;
+            cards.forEach(function(c){
+              var ok = !q || (c.getAttribute('data-name')||'').indexOf(q) > -1;
+              c.style.display = ok ? '' : 'none';
+              if (ok) n++;
+            });
+            if (bc) bc.textContent = n;
+            if (be) be.style.display = n ? 'none' : '';
+          });
+        }
+      })();
+      </script>
+
+      <!-- 询价弹窗 -->
+      <div class="rfq-modal" id="rfqModal" aria-hidden="true">
+        <div class="rm-bg" data-close></div>
+        <div class="rm-box" role="dialog" aria-modal="true">
+          <div class="rm-hd">
+            <div>
+              <span class="kicker"><%= t.sec_rfq_k %></span>
+              <b><%= t.sec_rfq_t %></b>
+            </div>
+            <button class="rm-x" type="button" data-close aria-label="Close">&times;</button>
+          </div>
+          <form id="rmForm" data-lang="<%= lang %>">
+            <input type="hidden" name="product" id="rmProduct" value="">
+            <div class="rm-prod" id="rmProdTag"></div>
+            <div class="frow">
+              <div><label><%= t.form_name %> *</label><input name="name" required></div>
+              <div><label><%= t.form_email %> *</label><input name="email" type="email" required></div>
+            </div>
+            <div class="frow">
+              <div><label><%= t.form_phone %></label><input name="phone"></div>
+              <div><label><%= t.form_company %></label><input name="company"></div>
+            </div>
+            <div><label><%= t.form_message %> *</label><textarea name="message" required></textarea></div>
+            <div class="fmsg" id="rmMsg"></div>
+            <div style="display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap">
+              <span class="fnote"><%= t.form_note %></span>
+              <button class="btn btn-primary" type="submit"><%= t.form_submit %></button>
+            </div>
+          </form>
+        </div>
+      </div>
+
+      <script>
+      (function(){
+        var modal = document.getElementById('rfqModal');
+        var form = document.getElementById('rmForm');
+        var prodTag = document.getElementById('rmProdTag');
+        var prodInput = document.getElementById('rmProduct');
+        var msg = document.getElementById('rmMsg');
+        function open(tag){
+          prodTag.textContent = tag;
+          prodInput.value = tag;
+          if (!form.querySelector('textarea').value) {
+            form.querySelector('textarea').value = tag + ' — ' + (form.getAttribute('data-lang') === 'zh' ? '请报价（数量：），谢谢。' : 'Please send me a quotation. Quantity: ');
+          }
+          modal.classList.add('open');
+          document.body.style.overflow = 'hidden';
+          var f = form.querySelector('input[name=name]'); if (f) f.focus();
+        }
+        function close(){
+          modal.classList.remove('open');
+          document.body.style.overflow = '';
+          msg.className = 'fmsg'; msg.textContent = '';
+        }
+        document.querySelectorAll('[data-rfq]').forEach(function(btn){
+          btn.addEventListener('click', function(e){ e.preventDefault(); open(btn.getAttribute('data-rfq')); });
+        });
+        modal.querySelectorAll('[data-close]').forEach(function(el){
+          el.addEventListener('click', close);
+        });
+        document.addEventListener('keydown', function(e){ if (e.key === 'Escape') close(); });
+        form.addEventListener('submit', function(e){
+          e.preventDefault();
+          var fd = new FormData(form);
+          var payload = {
+            name: fd.get('name'), email: fd.get('email'), phone: fd.get('phone'),
+            company: fd.get('company'), message: fd.get('message'),
+            product: fd.get('product'), lang: form.getAttribute('data-lang') || 'en'
+          };
+          if (!payload.name || !payload.message) { msg.className = 'fmsg err'; msg.textContent = 'Please fill in the required fields.'; return; }
+          fetch('/api/inquiry', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) })
+            .then(function(r){ return r.json(); })
+            .then(function(d){
+              if (d.ok) { msg.className = 'fmsg ok'; msg.textContent = form.getAttribute('data-okmsg') || 'Thank you! Your inquiry has been received.'; form.reset(); prodInput.value = prodTag.textContent; }
+              else { msg.className = 'fmsg err'; msg.textContent = 'Error, please try again.'; }
+            })
+            .catch(function(){ msg.className = 'fmsg err'; msg.textContent = 'Network error, please try again.'; });
+        });
+      })();
+      </script>
+
+    <% } %>
+
+  </div>
+</section>
+
+<%- include('partials/footer-v2') %>

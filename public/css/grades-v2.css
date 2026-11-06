@@ -1,0 +1,139 @@
+/* ============================================================
+   grades-v2.css — restyle the datasheet finder into the new
+   slate/sky design language (loaded AFTER grades.css)
+   ============================================================ */
+body.hv2{background:var(--s50);font-family:var(--jk);color:var(--s900)}
+body.hv2 .wrap{font-family:var(--jk)}
+
+/* hero → light catalog header */
+.g-hero{background:#fff;color:var(--s900);padding:40px 0 34px;border-bottom:1px solid var(--s200)}
+.g-hero::after{display:none}
+.g-hero .wrap{position:static;z-index:auto}
+.g-kicker{font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--s500);background:none;border:0;border-radius:0;padding:0}
+.g-hero h1{font-size:26px;font-weight:800;letter-spacing:-.02em;color:var(--s900);margin:10px 0 10px}
+@media(min-width:640px){.g-hero h1{font-size:32px}}
+.g-sub{color:var(--s600);font-size:14px;max-width:760px;line-height:1.7}
+.g-stats{display:flex;gap:36px;margin-top:24px;flex-wrap:wrap}
+.g-stats b{display:block;font-size:22px;font-weight:800;color:var(--s900);line-height:1.1;font-family:var(--mo);font-variant-numeric:tabular-nums}
+.g-stats span{font-size:11.5px;color:var(--s500);font-weight:500}
+
+/* toolbar → white filter card */
+.g-body{padding:32px 0 90px;background:var(--s50)}
+.g-toolbar{background:#fff;border:1px solid var(--s200);border-radius:10px;padding:16px 18px;box-shadow:0 1px 3px rgba(15,23,42,.05);top:72px}
+.g-search{border:1px solid var(--s300);border-radius:7px;background:var(--s50)}
+.g-search:focus-within{border-color:var(--s800);box-shadow:none;background:#fff}
+.g-search input{font-family:var(--jk);font-size:14px}
+.g-qclear{color:var(--s400)}
+.g-chips{margin-top:12px;gap:6px}
+.g-chip{border:1px solid var(--s200);background:var(--s100);border-radius:6px;padding:7px 13px;font-size:12px;font-weight:500;color:var(--s600);font-family:var(--jk)}
+.g-chip:hover{border-color:var(--s300);color:var(--s900)}
+.g-chip.on{background:var(--s900);border-color:var(--s900);color:#fff;font-weight:600}
+.g-fbtn{border:1px solid var(--s200);border-radius:6px;background:#fff;color:var(--s600);font-family:var(--jk);font-size:12.5px}
+.g-fbtn:hover{border-color:var(--s400);color:var(--s900)}
+.g-fbtn em{background:var(--s900)}
+.g-sort{border:1px solid var(--s300);border-radius:7px;font-family:var(--jk);font-size:13px;background:var(--s50)}
+.g-count{font-family:var(--mo);font-size:12px;color:var(--s500)}
+.g-count b{color:var(--s900);font-family:var(--mo)}
+/* 「✓ TDS 已核对」快捷筛选按钮 */
+.g-vbtn{display:inline-flex;align-items:center;gap:5px;height:30px;padding:0 12px 0 8px;border:1px solid #34d399;background:#fff;border-radius:99px;color:#047857;font-family:var(--jk);font-size:11.5px;font-weight:700;cursor:pointer;margin-left:auto;margin-right:12px;white-space:nowrap;transition:background .15s,border-color .15s,color .15s}
+.g-vbtn:hover{background:#ecfdf5}
+.g-vbtn.on{background:#047857;border-color:#047857;color:#fff}
+.g-vbtn .g-vck{display:inline-flex;align-items:center;justify-content:center;width:15px;height:15px;border-radius:99px;background:#10b981;color:#fff;font-size:9px;font-weight:900;line-height:1;flex:none}
+.g-vbtn.on .g-vck{background:#fff;color:#047857}
+.g-vbtn b{font-weight:800}
+@media(max-width:600px){.g-vbtn{font-size:11px;padding:0 9px 0 7px;margin-right:8px;height:28px}}
+
+/* filters panel */
+.g-panel{border-top:1px dashed var(--s200)}
+.g-fl>span{color:var(--s500);font-family:var(--jk)}
+.g-fl input,.g-fl select{border:1px solid var(--s300);border-radius:7px;background:var(--s50);font-family:var(--jk)}
+.g-fl input:focus,.g-fl select:focus{border-color:var(--s800)}
+.g-ck{border:1px solid var(--s200);border-radius:6px;font-family:var(--jk)}
+.g-ck:has(input:checked){background:#e0f2fe;border-color:#0284c7;color:#075985}
+.g-btn-ghost{border:1px solid var(--s200);border-radius:6px;font-family:var(--jk)}
+.g-btn-ghost:hover{border-color:var(--s400);color:var(--s900)}
+
+/* table */
+.g-tablewrap{border:1px solid var(--s200);border-radius:10px;box-shadow:0 1px 3px rgba(15,23,42,.05);background:#fff}
+.g-table th{background:var(--s50);color:var(--s500);border-bottom:1px solid var(--s200);font-family:var(--jk);letter-spacing:.06em}
+.g-table td{border-bottom:1px solid var(--s100);font-family:var(--jk)}
+.g-table tbody tr:hover{background:#f0f9ff}
+.g-table tbody tr.picked{background:#e0f2fe}
+.g-c-grade b{font-weight:800}
+.g-poly{background:#e0f2fe;color:#075985;font-family:var(--jk);font-weight:600}
+.g-c-feat em{background:var(--s100);color:var(--s600);font-family:var(--jk)}
+.g-st.ok{background:#ecfdf5;color:#047857}
+.g-st.mid{background:#fffbeb;color:#b45309}
+.g-st.no{background:#fef2f2;color:#b91c1c}
+/* 原厂 TDS 已核对标识 */
+.g-c-grade .g-ver{display:inline-flex;align-items:center;gap:2.5px;height:17px;padding:0 5px 0 4px;border-radius:4px;background:#fff;border:1px solid #34d399;color:#047857;font-size:9.5px;font-weight:800;font-style:normal;line-height:1;letter-spacing:.03em;margin-left:6px;vertical-align:1px;cursor:help;white-space:nowrap}
+@media(max-width:600px){.g-c-grade .g-ver span{display:none}.g-c-grade .g-ver{padding:0 3.5px;gap:0}}
+.g-tag.ver{background:#d1fae5;color:#047857;font-weight:700}
+/* 详情页「原厂 TDS 核对」徽标 */
+.g-verified{display:inline-flex;align-items:center;gap:7px;background:#ecfdf5;border:1px solid #a7f3d0;color:#047857;font-size:12px;font-weight:700;padding:5px 12px 5px 9px;border-radius:99px;margin:2px 0 12px;cursor:help}
+.g-verified .g-vck{display:inline-flex;align-items:center;justify-content:center;width:15px;height:15px;border-radius:99px;background:#10b981;color:#fff;font-size:9.5px;font-weight:900;line-height:1}
+
+/* 程序化 SEO 内容区：概述 / 加工指南 / FAQ */
+.g-about{margin-bottom:4px}
+.g-about p{font-size:13.5px;line-height:1.85;color:var(--s700);margin:0 0 10px}
+.g-pgbox,.g-faqbox{margin-top:20px}
+.g-pg{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:10px;margin:10px 0 6px}
+.g-pg-row{background:var(--s50);border:1px solid var(--s100);border-radius:8px;padding:10px 12px}
+.g-pg-row span{display:block;font-size:11px;color:var(--s500);margin-bottom:4px}
+.g-pg-row b{font-size:14.5px;font-weight:700;color:var(--s900)}
+.g-pg-note{font-size:12px;color:var(--s600);line-height:1.65;margin:6px 0 0}
+.g-faq details{border:1px solid var(--s100);border-radius:8px;margin-bottom:8px;background:#fff}
+.g-faq summary{cursor:pointer;font-size:13px;font-weight:600;color:var(--s800);padding:11px 14px;list-style:none;position:relative;padding-right:36px}
+.g-faq summary::-webkit-details-marker{display:none}
+.g-faq summary::after{content:'+';position:absolute;right:14px;top:50%;transform:translateY(-50%);color:var(--s400);font-weight:700;font-size:15px}
+.g-faq details[open] summary::after{content:'−'}
+.g-faq details p{font-size:13px;line-height:1.7;color:var(--s600);padding:0 14px 12px;margin:0}
+
+/* action buttons */
+.g-mini{border:1px solid var(--s200);border-radius:6px;font-family:var(--jk);font-weight:600;color:var(--s700)}
+.g-mini:hover{border-color:var(--s400);background:var(--s50)}
+.g-mini.pri{background:var(--s900);border-color:var(--s900);color:#fff;font-weight:700}
+.g-mini.pri:hover{background:var(--s800);border-color:var(--s800)}
+
+/* compare tray */
+.g-tray{background:#fff;border-top:1px solid var(--s200);box-shadow:0 -6px 24px rgba(15,23,42,.1)}
+.g-tray-t{font-family:var(--jk);color:var(--s500)}
+.g-tchip{background:var(--s900);border-radius:6px;font-family:var(--jk)}
+
+/* modals */
+.g-modal-bg{background:rgba(2,6,23,.55)}
+.g-modal-box{border-radius:14px;font-family:var(--jk)}
+.g-modal-hd h3{letter-spacing:-.01em;font-weight:800}
+.g-d-brand{color:var(--sky)}
+.g-x{background:var(--s100);border-radius:8px;font-family:var(--jk)}
+.g-sec{color:var(--s500);font-family:var(--jk)}
+.g-dtable th{color:var(--s500);font-family:var(--jk)}
+.g-dtable td{font-family:var(--jk)}
+.g-tag{background:var(--s100);color:var(--s600);font-family:var(--jk)}
+.g-tag.poly{background:#e0f2fe;color:#075985}
+.g-tag.st.ok{background:#ecfdf5;color:#047857}
+.g-remark{background:var(--s50);border-left-color:var(--sky)}
+.g-kv-r span{font-family:var(--jk)}
+.g-kv-r p{font-family:var(--jk)}
+
+/* empty + note */
+.g-empty{background:#fff;border:1px solid var(--s200);border-radius:10px}
+.g-note{color:var(--s400);font-family:var(--jk)}
+.g-sug-b{border:1px solid var(--s200);border-radius:6px;font-family:var(--jk)}
+.g-sug-b:hover{background:#e0f2fe;border-color:#0284c7}
+
+/* pagination (g-pager) */
+.g-pg{border:1px solid var(--s200);background:#fff;border-radius:6px;font-family:var(--jk);color:var(--s600)}
+.g-pg:hover:not(:disabled){border-color:var(--s400);color:var(--s900)}
+.g-pg.on{background:var(--s900);border-color:var(--s900);color:#fff}
+.g-pg-per{border:1px solid var(--s300);border-radius:6px;font-family:var(--jk)}
+
+/* comparison modal table */
+.g-cmp thead th{background:var(--s50)}
+.g-cmp td.best{background:#ecfdf5;color:#047857}
+.g-cmp tbody th{color:var(--s500);font-family:var(--jk)}
+
+/* print stays functional */
+@media print{
+  .hv2-nav,.hv2-foot,.hv2-wa,.g-tray,.g-toolbar{display:none!important}
+}

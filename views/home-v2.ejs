@@ -1,0 +1,766 @@
+<!DOCTYPE html>
+<html lang="<%= lang %>">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title><%= h.hero.title %> — Ningbo Xianxunhe New Materials</title>
+<meta name="description" content="<%= h.hero.subtitle.slice(0,150) %>">
+<% var _canon = (typeof canonical !== 'undefined' && canonical) ? canonical : ('https://www.nbxxh.com/' + lang); %>
+<% var _ogTitle = h.hero.title + ' — Ningbo Xianxunhe New Materials'; %>
+<% var _ogDesc = h.hero.subtitle.slice(0, 200); %>
+<% var _ogImg = (typeof ogImage !== 'undefined' && ogImage) ? ogImage : 'https://www.nbxxh.com/assets/og-default.png'; %>
+<link rel="canonical" href="<%= _canon %>">
+<% if (typeof langAlts !== 'undefined' && langAlts) { Object.keys(langAlts).forEach(function(l){ %><link rel="alternate" hreflang="<%= l %>" href="<%= langAlts[l] %>"><% }); } %>
+<link rel="alternate" hreflang="x-default" href="https://www.nbxxh.com/en">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Ningbo Xianxunhe New Materials">
+<meta property="og:locale" content="<%= lang %>">
+<meta property="og:url" content="<%= _canon %>">
+<meta property="og:title" content="<%= _ogTitle %>">
+<meta property="og:description" content="<%= _ogDesc %>">
+<meta property="og:image" content="<%= _ogImg %>">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="<%= _ogTitle %>">
+<meta name="twitter:description" content="<%= _ogDesc %>">
+<meta name="twitter:image" content="<%= _ogImg %>">
+<!-- GA4 -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-65MXGN3FTC"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-65MXGN3FTC');
+</script>
+<link rel="icon" type="image/svg+xml" href="/assets/favicon.svg">
+<link rel="stylesheet" href="/static/css/home-v2.css?v=20261102a">
+</head>
+<body class="hv2">
+
+<!-- ============ NAVBAR ============ -->
+<header class="hv2-nav">
+  <div class="wrap">
+    <a class="hv2-logo" href="/<%= lang %><%= langBase %>">
+      <svg viewBox="0 0 200 200"><g stroke="#1E4E79" stroke-width="11" stroke-linecap="round"><line x1="100" y1="100" x2="36" y2="36"/><line x1="100" y1="100" x2="164" y2="36"/><line x1="100" y1="100" x2="36" y2="164"/><line x1="100" y1="100" x2="164" y2="164"/></g><g fill="#1E4E79"><circle cx="67" cy="67" r="10.5"/><circle cx="133" cy="67" r="10.5"/><circle cx="67" cy="133" r="10.5"/><circle cx="133" cy="133" r="10.5"/></g><g fill="#12395C"><circle cx="34" cy="34" r="15.5"/><circle cx="166" cy="34" r="15.5"/><circle cx="34" cy="166" r="15.5"/><circle cx="166" cy="166" r="15.5"/></g><circle cx="100" cy="100" r="18" fill="#1B6AC9"/></svg>
+      <span><%= lang==='zh' ? '纤讯和新材料' : 'Xianxunhe' %></span>
+    </a>
+    <nav class="hv2-navlinks">
+      <a href="#catalog"><%= h.nav.catalog %></a>
+      <a href="#applications"><%= h.nav.applications %></a>
+      <a href="#supply-chain"><%= h.nav.supplyChain %></a>
+      <a href="#partners"><%= h.nav.partners %></a>
+      <a href="#contact"><%= h.nav.contact %></a>
+    </nav>
+    <div class="hv2-navact">
+      <div class="hv2-lang" id="langBox">
+        <button type="button" onclick="document.getElementById('langBox').classList.toggle('open')">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+          <span><%= (LANGS.find(l=>l.code===lang)||{}).flag || lang.toUpperCase() %></span>
+        </button>
+        <div class="hv2-lang-menu">
+          <% LANGS.forEach(function(l){ %>
+            <a class="<%= l.code===lang?'on':'' %>" href="/<%= l.code %><%= langBase %>"><%= l.name %><% if(l.code===lang){ %>✓<% } %></a>
+          <% }); %>
+        </div>
+      </div>
+      <button class="hv2-btn-dark" onclick="openRfq()">
+        <span><%= h.nav.rfq %></span>
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+      </button>
+    </div>
+    <button class="hv2-burger" onclick="document.getElementById('mobNav').classList.toggle('open')" aria-label="Menu">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 6h16M4 12h16M4 18h16"/></svg>
+    </button>
+  </div>
+  <div class="hv2-mob" id="mobNav">
+    <a href="#catalog" onclick="document.getElementById('mobNav').classList.remove('open')"><span><%= h.nav.catalog %></span><span>→</span></a>
+    <a href="#applications" onclick="document.getElementById('mobNav').classList.remove('open')"><span><%= h.nav.applications %></span><span>→</span></a>
+    <a href="#supply-chain" onclick="document.getElementById('mobNav').classList.remove('open')"><span><%= h.nav.supplyChain %></span><span>→</span></a>
+    <a href="#partners" onclick="document.getElementById('mobNav').classList.remove('open')"><span><%= h.nav.partners %></span><span>→</span></a>
+    <a href="#contact" onclick="document.getElementById('mobNav').classList.remove('open')"><span><%= h.nav.contact %></span><span>→</span></a>
+    <a class="cta" href="javascript:openRfq()"><%= h.nav.rfq %></a>
+  </div>
+</header>
+
+<main>
+  <!-- ============ HERO ============ -->
+  <section class="hv2-hero">
+    <div class="wrap">
+      <div class="grid">
+        <div class="rv">
+          <div class="kick"><span><%= h.hero.kicker %></span><span>·</span><span class="dom">nbxxh.com</span></div>
+          <h1><%= h.hero.title %></h1>
+          <p class="sub"><%= h.hero.subtitle %></p>
+          <form class="hv2-search" action="/<%= lang %>/grades" method="get">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.3-4.3"/></svg>
+            <input type="search" name="q" placeholder="<%= h.hero.searchPh %>" autocomplete="off">
+            <button type="submit"><%= h.hero.searchBtn %></button>
+          </form>
+          <div class="ctas">
+            <button class="hv2-btn-dark big" onclick="openRfq()">
+              <span><%= h.hero.quote %></span>
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+            </button>
+            <a class="hv2-btn-out big" href="/<%= lang %>/grades"><%= h.hero.browse %></a>
+          </div>
+        </div>
+        <div class="hv2-heroimg rv">
+          <img src="/assets/design/hero-resins.jpg" alt="Virgin engineering polymer resin granules" loading="eager">
+          <div class="cap">
+            <span class="tag"><%= h.hero.imgTag %></span>
+            <span class="brands"><%= h.hero.imgBrands %></span>
+          </div>
+        </div>
+      </div>
+      <div class="hv2-kpi rv">
+        <div class="cell">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 8v13H3V8M1 3h22v5H1zM10 12h4"/></svg>
+          <div><b><%= stats.grades %>+</b><span><%= h.hero.statGrades %></span></div>
+        </div>
+        <div class="cell">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="6"/><path d="M15.5 13l1.5 8-5-3-5 3 1.5-8"/></svg>
+          <div><b><%= stats.stock %>+</b><span><%= h.hero.statStock %></span></div>
+        </div>
+        <div class="cell">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 21V8l9-5 9 5v13M9 21v-8h6v8"/></svg>
+          <div><b><%= lang==='zh' ? '余姚 · 宁波港' : 'Yuyao · Ningbo Port' %></b><span><%= h.hero.statBrands %> · <%= stats.brands %>+</span></div>
+        </div>
+        <div class="cell">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="M9 12l2 2 4-4"/></svg>
+          <div><b>100% COA</b><span><%= h.hero.statCoa %></span></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ GRADE CATALOG (data from datasheets DB) ============ -->
+  <section class="hv2-sec gray" id="catalog">
+    <div class="wrap">
+      <div class="head rv">
+        <div class="kicker"><%= h.catalog.kicker %></div>
+        <h2><%= h.catalog.title %></h2>
+        <p><%= h.catalog.subtitle %></p>
+      </div>
+      <div class="hv2-cards">
+        <% spot.forEach(function(g){ %>
+          <div class="hv2-gcard rv">
+            <div>
+              <div class="top">
+                <div class="b"><span class="nm"><%= g.brand %></span><span>·</span><span><%= g.polymer %></span></div>
+                <span class="st <%= g.stock==='in_stock'?'spot':'req' %>"><%= stockLabel(g.stock) %></span>
+              </div>
+              <h3><a href="/<%= lang %>/grade/<%= g.slug %>"><%= g.grade %></a><span class="cat"><%= g.polymer %></span></h3>
+              <% if (g.feat.length) { %>
+                <div class="feats"><% g.feat.forEach(function(f){ %><i><%= f %></i><% }); %></div>
+              <% } %>
+              <div class="specs">
+                <div><span><%= h.catalog.mfi %></span><b><%= g.mfr!=null ? g.mfr : '—' %><% if(g.mfr_cond){ %> <i style="font-style:normal;font-size:10px;color:#94a3b8"><%= g.mfr_cond %></i><% } %></b></div>
+                <div><span><%= h.catalog.density %></span><b><%= g.density!=null ? g.density : '—' %></b></div>
+              </div>
+            </div>
+            <div class="act">
+              <a class="tds" href="/<%= lang %>/grade/<%= g.slug %>">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6M16 13H8M16 17H8M10 9H8"/></svg>
+                <%= h.catalog.tds %>
+              </a>
+              <button class="inq" onclick="openRfq('<%= g.grade %>')">
+                <span><%= h.catalog.inquire %></span>
+                <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6"><path d="M7 17L17 7M7 7h10v10"/></svg>
+              </button>
+            </div>
+          </div>
+        <% }); %>
+      </div>
+      <div class="hv2-more rv"><a href="/<%= lang %>/grades"><%= h.catalog.viewAll %></a></div>
+    </div>
+  </section>
+
+  <!-- ============ APPLICATIONS ============ -->
+  <section class="hv2-sec white" id="applications">
+    <div class="wrap">
+      <div class="head rv">
+        <div class="kicker"><%= h.apps.kicker %></div>
+        <h2><%= h.apps.title %></h2>
+        <p><%= h.apps.subtitle %></p>
+      </div>
+      <div class="hv2-bento">
+        <div class="hv2-bcard c1 rv">
+          <div class="media">
+            <img src="/assets/design/app-automotive.jpg" alt="Automotive precision molding" loading="lazy">
+            <div class="cap"><span class="en">AUTOMOTIVE &amp; MOBILITY</span><span class="res"><%= h.apps.automotive.res %></span></div>
+          </div>
+          <div class="body">
+            <h3><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 17h14M6 17l1.5-5h9L18 17M7 12l1-4h8l1 4"/><circle cx="7.5" cy="17.5" r="1.5"/><circle cx="16.5" cy="17.5" r="1.5"/></svg><%= h.apps.automotive.t %></h3>
+            <p><%= h.apps.automotive.d %></p>
+            <div class="foot"><span><%= h.apps.automotive.res %></span><a href="/<%= lang %>/grades?q=ABS"><%= h.apps.automotive.browse %> →</a></div>
+          </div>
+        </div>
+        <div class="hv2-bcard c2 rv">
+          <div class="media">
+            <img src="/assets/design/app-electronics.jpg" alt="Optical polymer electronics" loading="lazy">
+            <div class="cap"><span class="en">3C OPTICS &amp; HOUSINGS</span><span class="res"><%= h.apps.electronics.res %></span></div>
+          </div>
+          <div class="body">
+            <h3><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="7" y="2" width="10" height="20" rx="2"/><path d="M11 18h2"/></svg><%= h.apps.electronics.t %></h3>
+            <p><%= h.apps.electronics.d %></p>
+            <div class="foot"><span><%= h.apps.electronics.res %></span><a href="/<%= lang %>/grades?q=PC"><%= h.apps.electronics.browse %> →</a></div>
+          </div>
+        </div>
+        <div class="hv2-bcard c3 rv">
+          <div class="body">
+            <h3><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12l9-9 9 9M5 10v10h14V10"/><path d="M9 20v-6h6v6"/></svg><%= h.apps.appliances.t %></h3>
+            <p><%= h.apps.appliances.d %></p>
+            <ul class="list">
+              <% h.apps.appliances.items.forEach(function(it){ %><li><%= it %></li><% }); %>
+            </ul>
+            <div class="foot"><span><%= h.apps.appliances.res %></span><a href="/<%= lang %>/grades?q=ABS"><%= h.apps.appliances.browse %> →</a></div>
+          </div>
+        </div>
+        <div class="hv2-bcard c4 rv">
+          <div class="body">
+            <h3><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="5" y="5" width="14" height="14" rx="2"/><path d="M9 2v3M15 2v3M9 19v3M15 19v3M2 9h3M2 15h3M19 9h3M19 15h3"/></svg><%= h.apps.industrial.t %></h3>
+            <p><%= h.apps.industrial.d %></p>
+            <ul class="list">
+              <% h.apps.industrial.items.forEach(function(it){ %><li><%= it %></li><% }); %>
+            </ul>
+            <div class="foot"><span><%= h.apps.industrial.res %></span><a href="/<%= lang %>/grades?q=POM"><%= h.apps.industrial.browse %> →</a></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ SUPPLY CHAIN ============ -->
+  <section class="hv2-sec gray" id="supply-chain">
+    <div class="wrap">
+      <div class="head rv">
+        <div class="kicker"><%= h.supply.kicker %></div>
+        <h2><%= h.supply.title %></h2>
+        <p><%= h.supply.subtitle %></p>
+      </div>
+
+      <div class="hv2-wh rv">
+        <div class="media">
+          <div class="hv2-stage" id="mStage">
+            <video id="mVid" src="<%= media[0].src %>" poster="<%= media[0].poster %>" controls preload="metadata" playsinline></video>
+            <img id="mImg" src="<%= media[2].src %>" alt="Warehouse photo" style="display:none" loading="lazy">
+            <div class="cap" id="mCap"><div><b><%= h.supply.whCaption %></b><%= h.supply.whSub %></div></div>
+          </div>
+          <div class="hv2-thumbs" id="mThumbs">
+            <% media.forEach(function(m, i){ %>
+              <button type="button" class="<%= i===0?'on':'' %>" data-i="<%= i %>" data-type="<%= m.type %>" data-src="<%= m.src %>" data-poster="<%= m.poster||'' %>">
+                <img src="<%= m.poster || m.src %>" alt="<%= m.label %>" loading="lazy">
+                <% if (m.type === 'video') { %><span class="pl">▶</span><% } %>
+                <span class="lb"><%= m.label %></span>
+              </button>
+            <% }); %>
+          </div>
+        </div>
+        <div class="body">
+          <h3><%= h.supply.whTitle %></h3>
+          <p><%= h.supply.whText %></p>
+          <div class="stats">
+            <div><span><%= h.supply.area %></span><b>10,000+ ㎡</b></div>
+            <div><span><%= h.supply.dispatch %></span><b>&le; 24 h</b></div>
+          </div>
+          <div class="hv2-trade">
+            <div><b><%= h.supply.trade.title %> · MOQ</b><%= h.supply.trade.moq %></div>
+            <div><b><%= h.supply.trade.title %> · T/T</b><%= h.supply.trade.pay %></div>
+            <div><b><%= h.supply.trade.title %> · Lead</b><%= h.supply.trade.lead %></div>
+            <div><b><%= h.supply.trade.title %> · Sample</b><%= h.supply.trade.sample %></div>
+          </div>
+          <button class="hv2-btn-dark" onclick="openRfq()"><%= h.supply.cta %></button>
+          <a class="hv2-calc-entry" href="/<%= lang %>/container-calculator">
+            <span class="ce-ic">📦</span>
+            <span class="ce-tx">
+              <b><%= h.supply.calcEntry %></b>
+              <i><%= h.supply.calcEntryDesc %></i>
+            </span>
+            <span class="ce-go">→</span>
+          </a>
+        </div>
+      </div>
+
+      <div class="hv2-pillars">
+        <% h.supply.pillars.forEach(function(p){ %>
+          <div class="hv2-pillar rv">
+            <div>
+              <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg></div>
+              <h4><%= p.t %></h4>
+              <p><%= p.d %></p>
+            </div>
+            <div class="ok"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M22 11.1V12a10 10 0 1 1-5.9-9.1"/><path d="M22 4L12 14l-3-3"/></svg><%= h.supply.assured %></div>
+          </div>
+        <% }); %>
+      </div>
+
+      <div class="hv2-partners" id="partners">
+        <div class="kicker"><%= h.partners.kicker %></div>
+        <div class="hv2-pgrid">
+          <% PARTNERS.forEach(function(b){ %>
+            <div class="hv2-pcard">
+              <div><b><%= b.name %></b><div class="co"><%= b.country %></div></div>
+              <div class="re"><%= b.coreResin %></div>
+            </div>
+          <% }); %>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ CONTACT ============ -->
+  <section class="hv2-sec white" id="contact">
+    <div class="wrap">
+      <div class="head rv">
+        <div class="kicker"><%= h.contact.kicker %></div>
+        <h2><%= h.contact.title %></h2>
+        <p><%= h.contact.subtitle %></p>
+      </div>
+      <div class="hv2-contact">
+        <div class="about rv">
+          <h3><%= h.contact.aboutTitle %></h3>
+          <p><%= h.contact.aboutP1 %></p>
+          <p><%= h.contact.aboutP2 %></p>
+          <p><%= h.contact.aboutP3 %></p>
+          <div class="mini">
+            <div><span><%= h.contact.locLabel %></span><b><%= h.contact.locValue %></b></div>
+            <div><span><%= h.contact.domLabel %></span><b>@nbxxh.com</b></div>
+            <div><span><%= h.contact.netLabel %></span><b><%= h.contact.netValue %></b></div>
+          </div>
+        </div>
+        <div class="hv2-cinfo rv">
+          <div>
+            <div class="hv2-crow">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0z"/><circle cx="12" cy="10" r="3"/></svg>
+              <div><div class="lb"><%= h.contact.hqLabel %></div><div class="vl" style="font-family:var(--jk)"><%= h.contact.hqValue %></div></div>
+            </div>
+            <div class="hv2-crow">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="M22 7l-10 6L2 7"/></svg>
+              <div><div class="lb"><%= h.contact.mailLabel %></div><div class="vl"><%= settings.email %><a href="mailto:<%= settings.email %>">✉</a></div></div>
+            </div>
+            <div class="hv2-crow">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1 1 .4 2 .7 2.8a2 2 0 0 1-.5 2.1L8 10a16 16 0 0 0 6 6l1.4-1.3a2 2 0 0 1 2.1-.5c.9.3 1.9.6 2.8.7a2 2 0 0 1 1.7 2z"/></svg>
+              <div><div class="lb"><%= h.contact.phoneLabel %></div><div class="vl"><%= settings.whatsapp %><a href="https://wa.me/<%= String(settings.whatsapp||'').replace(/[^0-9]/g,'') %>" target="_blank" rel="noopener">WhatsApp</a></div></div>
+            </div>
+            <div class="hv2-crow">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+              <div><div class="lb"><%= h.contact.siteLabel %></div><div class="vl">https://nbxxh.com</div></div>
+            </div>
+            <div class="hv2-crow">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+              <div><div class="lb"><%= h.contact.hoursLabel %></div><div class="vl" style="font-family:var(--jk);font-size:12px"><%= h.contact.hoursValue %></div></div>
+            </div>
+          </div>
+          <div class="note"><%= h.contact.visitNote %></div>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<!-- ============ FOOTER ============ -->
+<footer class="hv2-foot">
+  <div class="wrap">
+    <div class="top">
+      <div>
+        <div class="brand">
+          <svg viewBox="0 0 200 200"><g stroke="#E8EFF7" stroke-width="11" stroke-linecap="round"><line x1="100" y1="100" x2="36" y2="36"/><line x1="100" y1="100" x2="164" y2="36"/><line x1="100" y1="100" x2="36" y2="164"/><line x1="100" y1="100" x2="164" y2="164"/></g><g fill="#E8EFF7"><circle cx="67" cy="67" r="10.5"/><circle cx="133" cy="67" r="10.5"/><circle cx="67" cy="133" r="10.5"/><circle cx="133" cy="133" r="10.5"/></g><g fill="#FFFFFF"><circle cx="34" cy="34" r="15.5"/><circle cx="166" cy="34" r="15.5"/><circle cx="34" cy="166" r="15.5"/><circle cx="166" cy="166" r="15.5"/></g><circle cx="100" cy="100" r="18" fill="#5FA8EF"/></svg>
+          <span><%= lang==='zh' ? '宁波纤讯和新材料有限公司' : 'Ningbo Xianxunhe New Materials' %></span>
+        </div>
+        <p class="desc"><%= h.footer.desc %></p>
+        <div class="dom">nbxxh.com · Ningbo, Zhejiang, China</div>
+      </div>
+      <div>
+        <h5><%= h.footer.featured %></h5>
+        <ul>
+          <li><a href="/<%= lang %>/grades?q=ABS">ABS (PA-757 / 757K / D-180)</a></li>
+          <li><a href="/<%= lang %>/grades?q=PC">PC (PC-110 / Makrolon 2805)</a></li>
+          <li><a href="/<%= lang %>/grades?q=PP">PP (K8003 / T30S / V30G)</a></li>
+          <li><a href="/<%= lang %>/grades?q=HDPE">HDPE (5000S / 6098)</a></li>
+          <li><a href="/<%= lang %>/grades?q=POM">POM (F20-03 / M90)</a></li>
+          <li><a href="/<%= lang %>/grades"><%= h.catalog.viewAll %></a></li>
+        </ul>
+      </div>
+      <div class="q">
+        <h5><%= h.footer.quickTitle %></h5>
+        <p><%= h.footer.quickDesc %></p>
+        <button class="hv2-btn-dark" onclick="openRfq()"><%= h.nav.rfq %></button>
+      </div>
+    </div>
+    <div class="bot">
+      <div><%= h.footer.rights %></div>
+      <div class="lg"><%= h.footer.disclaimer %></div>
+    </div>
+  </div>
+</footer>
+
+<!-- ============ RFQ MODAL ============ -->
+<div class="hv2-rfq" id="rfqBox">
+  <div class="bg" onclick="closeRfq()"></div>
+  <div class="box">
+    <div class="hd">
+      <div>
+        <h3><%= h.rfq.title %></h3>
+        <p><%= h.rfq.sub %></p>
+      </div>
+      <button class="x" onclick="closeRfq()">×</button>
+    </div>
+    <form id="rfqForm">
+      <label><%= h.rfq.name %></label>
+      <input type="text" id="rfqName" required>
+      <label><%= h.rfq.email %></label>
+      <input type="email" id="rfqEmail">
+      <label><%= h.rfq.phone %></label>
+      <input type="text" id="rfqPhone">
+      <label><%= h.rfq.company %></label>
+      <input type="text" id="rfqCompany">
+      <label><%= h.rfq.prod %></label>
+      <div class="hv2-tagbox" id="rfqTagbox">
+        <input type="text" id="rfqProdInput" placeholder="<%= h.rfq.prodPh %>">
+      </div>
+      <label><%= h.rfq.msg %></label>
+      <textarea id="rfqMsg" placeholder="<%= h.rfq.msgPh %>" required></textarea>
+      <div class="ft">
+        <button type="button" class="hv2-btn-out" onclick="closeRfq()"><%= h.rfq.close %></button>
+        <button type="submit" class="hv2-btn-dark" id="rfqSend"><%= h.rfq.send %></button>
+      </div>
+    </form>
+    <div class="ok-msg"><%= h.rfq.ok %></div>
+  </div>
+</div>
+
+<!-- WhatsApp float -->
+<a class="hv2-wa" href="https://wa.me/<%= String(settings.whatsapp||'').replace(/[^0-9]/g,'') %>" target="_blank" rel="noopener" aria-label="WhatsApp">
+  <svg viewBox="0 0 24 24"><path d="M12 0a12 12 0 0 0-10.3 18.1L0 24l6.1-1.6A12 12 0 1 0 12 0zm0 22a10 10 0 0 1-5.1-1.4l-.4-.2-3.6 1 1-3.5-.2-.4A10 10 0 1 1 12 22zm5.5-7.5c-.3-.8-1.7-1.6-2.3-1.6-.6-.1-1.1 0-1.5.5-.3.5-.4.8-.8.7-.4-.1-1.6-.6-2.7-1.7-.8-.8-1.3-1.8-1.4-2.2-.1-.4.3-.6.5-.8.2-.3.3-.5.4-.8.1-.3 0-.5-.1-.7-.1-.2-.8-2-1.1-2.4-.3-.4-.6-.4-.8-.4h-.7c-.3 0-.7.1-1 .5-.4.4-1.1 1.2-1.1 2.6 0 1.4 1 2.8 1.1 3 .1.2 2 3.2 4.9 4.4 2.4 1 3 .9 3.6.8.6-.1 1.7-.7 2-1.4.3-.7.3-1.3.2-1.4-.1-.2-.2-.2-.4-.3z"/></svg>
+</a>
+
+<script>
+/* RFQ grade autocomplete — 搜索式下拉建议（首页 + 内页共用）
+ * 数据源：/api/grades/suggest（公开接口，查牌号库）
+ * 交互对齐 Google：边打边搜、匹配高亮、↑↓ 选择、Enter 选中、Esc 关闭
+ *
+ * 关键：下拉挂到 body 上用 position:fixed 定位。
+ * 因为询价弹窗内部是 overflow:auto 的滚动容器，绝对定位下拉会被裁掉。
+ */
+(function () {
+  var DD = 'gs-dd';
+
+  var LANG = (location.pathname.split('/')[1] || 'en').toLowerCase();
+  if (!/^(en|zh|ru|vi|th|id)$/.test(LANG)) LANG = 'en';
+
+  var TXT = {
+    en: { s: 'Searching…', n: 'No match in library — press Enter to add anyway', c: 'matches' },
+    zh: { s: '搜索中…', n: '库里没有这个牌号 — 回车仍可添加', c: '个匹配' },
+    ru: { s: 'Поиск…', n: 'Нет в базе — нажмите Enter, чтобы добавить', c: 'совпадений' },
+    vi: { s: 'Đang tìm…', n: 'Không có trong kho — nhấn Enter để thêm', c: 'kết quả' },
+    th: { s: 'กำลังค้นหา…', n: 'ไม่พบในคลัง — กด Enter เพื่อเพิ่ม', c: 'รายการ' },
+    id: { s: 'Mencari…', n: 'Tidak ada di database — tekan Enter untuk menambah', c: 'hasil' }
+  }[LANG];
+
+  function esc(s) {
+    return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) {
+      return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c];
+    });
+  }
+
+  function mark(text, q) {
+    text = String(text == null ? '' : text);
+    if (!q) return esc(text);
+    var i = text.toLowerCase().indexOf(q.toLowerCase());
+    if (i < 0) return esc(text);
+    return esc(text.slice(0, i)) + '<mark>' + esc(text.substr(i, q.length)) + '</mark>' + esc(text.slice(i + q.length));
+  }
+
+  window.attachGradeSuggest = function (input, onPick) {
+    if (!input) return;
+
+    var dd = document.createElement('div');
+    dd.className = DD;
+    dd.style.display = 'none';
+    document.body.appendChild(dd);
+
+    var items = [], hi = -1, timer = null, reqId = 0, lastQ = '', loading = false;
+
+    function hide() {
+      dd.style.display = 'none';
+      hi = -1;
+      loading = false;
+      reqId++;                                   // 让在途请求失效，避免关掉后又自己弹出来
+    }
+
+    // 固定定位：跟随输入框，下方放不下就向上翻
+    function place() {
+      if (dd.style.display === 'none') return;
+      var box = input.closest('.hv2-tagbox') || input;
+      var r = box.getBoundingClientRect();
+      var h = Math.min(dd.scrollHeight || 240, 260);
+      var gap = 6;
+      var below = window.innerHeight - r.bottom - gap;
+      var above = r.top - gap;
+      var top;
+      if (below >= h || below >= above) top = r.bottom + gap;
+      else top = r.top - h - gap;
+      if (top < 4) top = 4;
+      dd.style.position = 'fixed';
+      dd.style.left = r.left + 'px';
+      dd.style.right = 'auto';
+      dd.style.width = r.width + 'px';
+      dd.style.top = top + 'px';
+      dd.style.bottom = 'auto';
+      dd.style.maxHeight = h + 'px';
+    }
+
+    function render() {
+      var html = '';
+      items.forEach(function (r, i) {
+        html += '<button type="button" class="gs-item' + (i === hi ? ' active' : '') + '" data-i="' + i + '">' +
+          '<b>' + mark(r.grade, lastQ) + '</b>' +
+          '<span>' + mark(r.brand, lastQ) + '</span>' +
+          (r.stock === 'in_stock' ? '<em>现货</em>' : '') +
+          '<i>' + esc(r.polymer) + '</i>' +
+          '</button>';
+      });
+      if (items.length) {
+        html += '<div class="gs-foot">' + (items.length >= 9 ? '9+' : items.length) + ' ' + esc(TXT.c) + '</div>';
+      }
+      dd.innerHTML = html;
+      place();
+      var act = dd.querySelector('.gs-item.active');
+      if (act) {
+        var t = act.offsetTop, vh = dd.clientHeight, st = dd.scrollTop;
+        if (t < st) dd.scrollTop = t;
+        else if (t + act.offsetHeight > st + vh) dd.scrollTop = t + act.offsetHeight - vh;
+      }
+    }
+
+    function apply(rows) {
+      items = rows || [];
+      hi = items.length ? 0 : -1;
+      if (!items.length) {
+        dd.innerHTML = '<div class="gs-empty">' + esc(TXT.n) + '</div>';
+        dd.style.display = 'block';
+        place();
+        return;
+      }
+      dd.style.display = 'block';
+      render();
+    }
+
+    function pick(i) {
+      var r = items[i];
+      if (!r) return;
+      onPick(r.grade);
+      hide();
+      input.value = '';
+      try { input.focus({ preventScroll: true }); } catch (e) { input.focus(); }
+    }
+
+    // 真正发起查询（防抖后调用；用户提前按回车时也直接调用）
+    function doSearch(v) {
+      if (!v) { hide(); return; }
+      var my = ++reqId;
+      loading = true;
+      clearTimeout(timer);
+      // 网络异常兜底：3 秒后放开回车，避免用户被卡死在“搜索中”
+      var guard = setTimeout(function () { if (my === reqId) loading = false; }, 3000);
+
+      fetch('/api/grades/suggest?q=' + encodeURIComponent(v) + '&limit=9')
+        .then(function (r) { return r.json(); })
+        .then(function (rows) {
+          clearTimeout(guard);
+          if (my !== reqId) return;
+          loading = false;
+          if (!Array.isArray(rows)) rows = [];
+          if (rows.length === 1 && rows[0].grade.toLowerCase() === v.toLowerCase()) { hide(); return; }
+          apply(rows);
+        })
+        .catch(function () {
+          clearTimeout(guard);
+          if (my === reqId) { loading = false; hide(); }
+        });
+    }
+
+    input.addEventListener('input', function () {
+      var v = input.value.trim();
+      lastQ = v;
+      clearTimeout(timer);
+      if (!v) { hide(); return; }
+
+      dd.innerHTML = '<div class="gs-empty">' + esc(TXT.s) + '</div>';
+      dd.style.display = 'block';
+      place();
+
+      loading = true;                              // 从敲下第一个字起就算“搜索中”，回车必须被拦
+      timer = setTimeout(function () { doSearch(v); }, 180);
+    });
+
+    // 键盘：必须绑在 document 的捕获阶段。
+    // 同一元素上 capture/bubble 监听器是按注册顺序执行的（capture 不优先），
+    // 而外层表单的「回车=添加标签」先注册，所以只能从 document 层提前截。
+    document.addEventListener('keydown', function (e) {
+      if (e.target !== input) return;
+      var open = dd.style.display !== 'none';
+
+      // 搜索还没返回时按回车：拦下来立即搜一次，别把半截文字当成牌号加进去
+      if (e.key === 'Enter' && loading) {
+        e.preventDefault(); e.stopPropagation();
+        doSearch(input.value.trim());
+        return;
+      }
+
+      if (e.key === 'Escape') { if (open) { e.preventDefault(); hide(); } return; }
+      if (!open || !items.length) return;
+      if (e.key === 'ArrowDown') {
+        e.preventDefault(); e.stopPropagation();
+        hi = (hi + 1) % items.length; render();
+      } else if (e.key === 'ArrowUp') {
+        e.preventDefault(); e.stopPropagation();
+        hi = (hi - 1 + items.length) % items.length; render();
+      } else if (e.key === 'Enter') {
+        e.preventDefault(); e.stopPropagation();
+        pick(hi < 0 ? 0 : hi);
+      }
+    }, true);
+
+    dd.addEventListener('mousedown', function (e) {
+      var b = e.target.closest('.gs-item');
+      if (!b) return;
+      e.preventDefault();
+      pick(parseInt(b.getAttribute('data-i'), 10));
+    });
+
+    dd.addEventListener('mousemove', function (e) {
+      var b = e.target.closest('.gs-item');
+      if (!b) return;
+      var i = parseInt(b.getAttribute('data-i'), 10);
+      if (i !== hi) { hi = i; render(); }
+    });
+
+    input.addEventListener('blur', function () { setTimeout(hide, 150); });
+    document.addEventListener('click', function (e) {
+      if (!dd.contains(e.target) && e.target !== input) hide();
+    });
+    // 弹窗内滚动 / 窗口尺寸变化时重新定位，避免下拉与输入框脱节
+    window.addEventListener('scroll', place, true);
+    window.addEventListener('resize', place);
+  };
+})();
+
+</script>
+<script>
+/* multi-grade tags for RFQ */
+var rfqTags=[];
+function rfqRenderTags(){
+  var box=document.getElementById('rfqTagbox'), inp=document.getElementById('rfqProdInput');
+  box.querySelectorAll('.hv2-tag').forEach(function(t){t.remove()});
+  rfqTags.forEach(function(g,i){
+    var s=document.createElement('span'); s.className='hv2-tag';
+    s.appendChild(document.createTextNode(g));
+    var x=document.createElement('b'); x.textContent='\u00d7'; x.setAttribute('aria-label','remove');
+    x.onclick=function(){ rfqTags.splice(i,1); rfqRenderTags(); };
+    s.appendChild(x);
+    box.insertBefore(s,inp);
+  });
+}
+function rfqAddTag(g){
+  g=(g||'').trim().replace(/[,;\u3001]+$/,'');
+  if(!g) return;
+  var dup=rfqTags.some(function(t){return t.toUpperCase()===g.toUpperCase()});
+  if(!dup){ rfqTags.push(g); rfqRenderTags(); }
+  document.getElementById('rfqProdInput').value='';
+}
+(function(){
+  var inp=document.getElementById('rfqProdInput');
+  if(!inp) return;
+  inp.addEventListener('keydown',function(e){
+    if(e.key==='Enter'||e.key===','||e.key==='\u3001'){ e.preventDefault(); rfqAddTag(inp.value); }
+    if(e.key==='Backspace'&&!inp.value&&rfqTags.length){ rfqTags.pop(); rfqRenderTags(); }
+  });
+  inp.addEventListener('blur',function(){ rfqAddTag(inp.value); });
+  if (typeof attachGradeSuggest === 'function') attachGradeSuggest(inp, rfqAddTag);
+})();
+function openRfq(grade){
+  var b=document.getElementById('rfqBox');
+  if(grade) rfqAddTag(grade);
+  b.classList.add('open'); b.classList.remove('sent');
+  document.body.style.overflow='hidden';
+  setTimeout(function(){document.getElementById('rfqName').focus()},80);
+}
+function closeRfq(){
+  document.getElementById('rfqBox').classList.remove('open');
+  document.body.style.overflow='';
+}
+document.getElementById('rfqForm').addEventListener('submit',function(e){
+  e.preventDefault();
+  var btn=document.getElementById('rfqSend');
+  btn.disabled=true; btn.textContent='<%= h.rfq.sending %>';
+  fetch('/api/inquiry',{
+    method:'POST',headers:{'Content-Type':'application/json'},
+    body:JSON.stringify({
+      name:document.getElementById('rfqName').value.trim(),
+      email:document.getElementById('rfqEmail').value.trim(),
+      phone:document.getElementById('rfqPhone').value.trim(),
+      company:document.getElementById('rfqCompany').value.trim(),
+      product:rfqTags.join(', '),
+      message:document.getElementById('rfqMsg').value.trim(),
+      lang:'<%= lang %>'
+    })
+  }).then(function(r){return r.json()}).then(function(d){
+    document.getElementById('rfqBox').classList.add('sent');
+    btn.disabled=false; btn.textContent='<%= h.rfq.send %>';
+  }).catch(function(){
+    btn.disabled=false; btn.textContent='<%= h.rfq.send %>';
+  });
+});
+document.addEventListener('keydown',function(e){ if(e.key==='Escape') closeRfq(); });
+document.addEventListener('click',function(e){
+  var box=document.getElementById('langBox');
+  if(box && !box.contains(e.target)) box.classList.remove('open');
+});
+(function(){
+  // warehouse media switcher (real footage)
+  var vid=document.getElementById('mVid'), img=document.getElementById('mImg'),
+      cap=document.getElementById('mCap'), thumbs=document.getElementById('mThumbs');
+  if(!thumbs) return;
+  thumbs.addEventListener('click',function(e){
+    var btn=e.target.closest('button'); if(!btn) return;
+    thumbs.querySelectorAll('button').forEach(function(b){b.classList.toggle('on', b===btn)});
+    vid.pause();
+    if(btn.getAttribute('data-type')==='video'){
+      vid.style.display=''; img.style.display='none';
+      if(vid.getAttribute('data-cur')!==btn.getAttribute('data-src')){
+        vid.setAttribute('data-cur',btn.getAttribute('data-src'));
+        vid.src=btn.getAttribute('data-src');
+        vid.poster=btn.getAttribute('data-poster');
+      }
+      cap.style.display='';
+    } else {
+      vid.style.display='none'; img.style.display='';
+      img.src=btn.getAttribute('data-src');
+      cap.style.display='none';
+    }
+  });
+  // photo lightbox
+  var lb=document.createElement('div');
+  lb.className='hv2-lb';
+  lb.innerHTML='<img alt="">';
+  lb.addEventListener('click',function(){lb.classList.remove('open');document.body.style.overflow='';});
+  document.body.appendChild(lb);
+  img.addEventListener('click',function(){
+    lb.querySelector('img').src=img.src;
+    lb.classList.add('open');
+    document.body.style.overflow='hidden';
+  });
+})();
+(function(){
+  var els=document.querySelectorAll('.rv');
+  if(!('IntersectionObserver' in window)){ els.forEach(function(el){el.classList.add('on')}); return; }
+  var io=new IntersectionObserver(function(entries){
+    entries.forEach(function(en){ if(en.isIntersecting){ en.target.classList.add('on'); io.unobserve(en.target);} });
+  },{threshold:0,rootMargin:'0px 0px -5% 0px'});
+  els.forEach(function(el){ io.observe(el); });
+})();
+</script>
+</body>
+</html>

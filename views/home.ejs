@@ -1,0 +1,305 @@
+<%- include('partials/header', { path: 'home' }) %>
+
+<section class="hero">
+  <div class="wrap grid">
+    <div>
+      <span class="badge"><%= t.hero_badge %></span>
+      <h1><%= t.hero_title %></h1>
+      <p class="lead"><%= t.hero_sub %></p>
+      <div class="ctas">
+        <a class="btn btn-amber" href="#rfq"><%= t.hero_cta1 %></a>
+        <a class="btn btn-ghost" href="/<%= lang %>/products"><%= t.hero_cta2 %></a>
+      </div>
+      <p class="wa-inline"><svg width="18" height="18" viewBox="0 0 24 24"><use href="#i-wa"/></svg>&nbsp;<%= t.whatsapp_text %>: <b><%= settings.whatsapp %></b></p>
+    </div>
+    <div class="hero-vis">
+      <div class="pellets">
+        <svg viewBox="0 0 24 24" style="width:60%;height:60%"><use href="#i-pellets" style="color:#5E9BE6"/></svg>
+      </div>
+      <div class="float-card fc1">
+        <span class="ic" style="background:#EAF2FC"><svg width="20" height="20" viewBox="0 0 24 24"><use href="#i-box"/></svg></span>
+        <span><b>Original packaging</b><span>25 kg / big bag</span></span>
+      </div>
+      <div class="float-card fc2">
+        <span class="ic" style="background:#FEF3E2"><svg width="20" height="20" viewBox="0 0 24 24"><use href="#i-truck"/></svg></span>
+        <span><b>FOB · CIF · DAP</b><span>SEA / RU / Global</span></span>
+      </div>
+    </div>
+  </div>
+  <div class="wrap">
+    <div class="stats">
+      <div><b><%= t.stat_cats_v %></b><span><%= t.stat_cats %></span></div>
+      <div><b><%= t.stat_brands_v %></b><span><%= t.stat_brands %></span></div>
+      <div><b><%= t.stat_market_v %></b><span><%= t.stat_market %></span></div>
+      <div><b><%= t.stat_service_v %></b><span><%= t.stat_service %></span></div>
+    </div>
+  </div>
+</section>
+
+<% var PELLET={abs:'white',pc:'blue','pc-abs':'blue',pa6:'ivory',pa66:'ivory',pa12:'ivory',pa46:'ivory',pom:'white',ppsu:'blue',poe:'clear',eva:'milky',surlyn:'white',pp:'milky',hdpe:'milky',ldpe:'milky',lldpe:'milky',gpps:'clear',hips:'white',modified:'dark'}; %>
+<section id="sec-products">
+  <div class="wrap center">
+    <span class="kicker"><%= t.sec_products_k %></span>
+    <h2><%= t.sec_products_t %></h2>
+    <p class="sub"><%= t.sec_products_s %></p>
+    <div class="cats-grid" style="text-align:left">
+      <% cats.forEach(c=>{ %>
+        <a class="cat-card" href="/<%= lang %>/category/<%= c.slug %>">
+          <div class="cat-band"><img src="/assets/pellets/<%= PELLET[c.slug]||'white' %>.jpg" alt="<%= c.name_en %>" loading="lazy"></div>
+          <div class="cat-body">
+            <h3><%= lang==='zh'?c.name_zh:c.name_en %></h3>
+            <p><%= (c.brands||'').split(',').slice(0,3).join(' · ') %></p>
+            <span class="arrow"><%= t.view_products %> <svg width="15" height="15" viewBox="0 0 24 24"><use href="#i-arrow-r"/></svg></span>
+          </div>
+        </a>
+      <% }); %>
+    </div>
+  </div>
+</section>
+
+<% if(featured.length){ %>
+<section style="background:var(--white);border-top:1px solid var(--line);border-bottom:1px solid var(--line)">
+  <div class="wrap">
+    <div class="center">
+      <span class="kicker"><%= t.sec_products_k %></span>
+      <h2><%= t.all_products %></h2>
+    </div>
+    <div class="prod-grid">
+      <% featured.forEach(p=>{ %>
+        <a class="prod-card" href="/<%= lang %>/products/<%= p.slug %>">
+          <div class="ph">
+            <% if(p.image){ %><img src="/uploads/<%= p.image %>" alt="<%= p.name_en %>" loading="lazy">
+            <% } else { %><svg viewBox="0 0 24 24"><use href="#i-pellets"/></svg><% } %>
+          </div>
+          <div class="bd">
+            <span class="cat-tag"><%= p.brand %></span>
+            <h3><%= lang==='zh'?p.name_zh:p.name_en %></h3>
+            <p><%= lang==='zh'?p.desc_zh:p.desc_en %></p>
+          </div>
+        </a>
+      <% }); %>
+    </div>
+    <div class="center" style="margin-top:30px"><a class="btn btn-outline" href="/<%= lang %>/products"><%= t.view_products %> <svg width="16" height="16" viewBox="0 0 24 24"><use href="#i-arrow-r"/></svg></a></div>
+  </div>
+</section>
+<% } %>
+
+<section id="sec-why" style="background:var(--white)">
+  <div class="wrap center">
+    <span class="kicker"><%= t.sec_whyus_k %></span>
+    <h2><%= t.sec_whyus_t %></h2>
+    <div class="why-grid" style="text-align:left">
+      <div class="why"><span class="num">01</span><h3><%= t.about_v1_t %></h3><p><%= t.about_v1_d %></p></div>
+      <div class="why"><span class="num">02</span><h3><%= t.about_v2_t %></h3><p><%= t.about_v2_d %></p></div>
+      <div class="why"><span class="num">03</span><h3><%= t.about_v3_t %></h3><p><%= t.about_v3_d %></p></div>
+      <div class="why"><span class="num">04</span><h3><%= t.about_v4_t %></h3><p><%= t.about_v4_d %></p></div>
+    </div>
+  </div>
+</section>
+
+<section id="sec-partners" style="background:var(--bg);border-top:1px solid var(--line);border-bottom:1px solid var(--line)">
+  <div class="wrap center">
+    <span class="kicker"><%= t.sec_partners_k %></span>
+    <h2><%= t.sec_partners_t %></h2>
+    <p class="sub"><%= t.sec_partners_s %></p>
+    <div class="partner-groups">
+      <% partners.forEach(g=>{ %>
+        <div class="partner-group">
+          <h3 class="pg-title"><%= g.key==='global'?t.p_global:(g.key==='asian'?t.p_asian:t.p_china) %></h3>
+          <div class="logo-wall">
+            <% g.brands.forEach(b=>{ %>
+              <div class="logo-cell">
+                <% if(b.logo){ %><img src="<%= b.logo %>" alt="<%= b.name %>" loading="lazy">
+                <% } else { %><span><%= b.name %></span><% } %>
+              </div>
+            <% }); %>
+          </div>
+        </div>
+      <% }); %>
+    </div>
+  </div>
+</section>
+
+<section class="apps" id="sec-apps">
+  <div class="wrap center">
+    <span class="kicker" style="background:rgba(255,255,255,.12);color:#9CC4F5"><%= t.sec_apps_k %></span>
+    <h2 style="color:#fff"><%= t.sec_apps_t %></h2>
+    <p class="sub"><%= t.sec_apps_s %></p>
+    <div class="app-grid">
+      <% ['Automotive','Electronics','Solar / PV','Wire & Cable','Packaging','Medical','Appliances','Consumer Goods','Construction','Footwear'].forEach(a=>{ %>
+        <div class="app"><%= a %></div>
+      <% }); %>
+    </div>
+  </div>
+</section>
+
+<section id="sec-warehouse" style="background:var(--white)">
+  <div class="wrap wh-grid">
+    <div class="wh-video">
+      <div class="wh-main" id="whMain">
+        <video id="whVideo" controls preload="metadata" poster="/assets/warehouse-poster.jpg">
+          <source src="/assets/warehouse.mp4" type="video/mp4">
+        </video>
+        <img id="whImage" src="/assets/warehouse-photo-1.jpg" alt="Warehouse real shot" style="display:none">
+      </div>
+      <div class="wh-thumbs" id="whThumbs">
+        <button type="button" class="wh-thumb active" data-type="video" data-src="/assets/warehouse.mp4" data-poster="/assets/warehouse-poster.jpg">
+          <img src="/assets/warehouse-poster.jpg" alt=""><span><%= lang==='zh'?'实拍视频 1':'Video 1' %></span>
+        </button>
+        <button type="button" class="wh-thumb" data-type="video" data-src="/assets/warehouse-2.mp4" data-poster="/assets/warehouse-2-poster.jpg">
+          <img src="/assets/warehouse-2-poster.jpg" alt=""><span><%= lang==='zh'?'实拍视频 2':'Video 2' %></span>
+        </button>
+        <button type="button" class="wh-thumb" data-type="image" data-src="/assets/warehouse-photo-1.jpg">
+          <img src="/assets/warehouse-photo-1.jpg" alt=""><span><%= lang==='zh'?'仓库实拍 1':'Photo 1' %></span>
+        </button>
+        <button type="button" class="wh-thumb" data-type="image" data-src="/assets/warehouse-photo-2.jpg">
+          <img src="/assets/warehouse-photo-2.jpg" alt=""><span><%= lang==='zh'?'仓库实拍 2':'Photo 2' %></span>
+        </button>
+      </div>
+      <div class="lb-overlay" id="lbOverlay"><img id="lbImg" src="" alt=""></div>
+    </div>
+    <div>
+      <span class="kicker"><%= t.sec_warehouse_k %></span>
+      <h2><%= t.sec_warehouse_t %></h2>
+      <p class="sub"><%= t.sec_warehouse_s %></p>
+      <div class="wh-points">
+        <div class="wh-point"><span class="dot">1</span><div><h4><%= t.about_v2_t %></h4><p><%= t.about_v2_d %></p></div></div>
+        <div class="wh-point"><span class="dot">2</span><div><h4><%= t.stat_service %>: <%= t.stat_service_v %></h4><p><%= t.form_note %></p></div></div>
+        <div class="wh-point"><span class="dot">3</span><div><h4><%= t.about_v4_t %></h4><p><%= t.about_v4_d %></p></div></div>
+      </div>
+    </div>
+  </div>
+</section>
+<script>
+(function(){
+  var video = document.getElementById('whVideo');
+  var image = document.getElementById('whImage');
+  var thumbs = document.querySelectorAll('#whThumbs .wh-thumb');
+  var overlay = document.getElementById('lbOverlay');
+  var lbImg = document.getElementById('lbImg');
+  if(!thumbs.length) return;
+
+  thumbs.forEach(function(th){
+    th.addEventListener('click', function(){
+      thumbs.forEach(function(x){ x.classList.remove('active'); });
+      th.classList.add('active');
+      video.pause();
+      if(th.getAttribute('data-type') === 'video'){
+        video.style.display = '';
+        image.style.display = 'none';
+        video.setAttribute('poster', th.getAttribute('data-poster'));
+        video.src = th.getAttribute('data-src');
+        video.load();
+      } else {
+        video.style.display = 'none';
+        image.style.display = '';
+        image.src = th.getAttribute('data-src');
+      }
+    });
+  });
+  image.addEventListener('click', function(){
+    lbImg.src = image.src;
+    overlay.style.display = 'grid';
+  });
+  overlay.addEventListener('click', function(){
+    overlay.style.display = 'none';
+    lbImg.src = '';
+  });
+})();
+</script>
+
+<section id="sec-quality">
+  <div class="wrap center">
+    <span class="kicker"><%= t.sec_quality_k %></span>
+    <h2><%= t.sec_quality_t %></h2>
+    <p class="sub"><%= t.sec_quality_s %></p>
+    <div class="q-grid">
+      <div class="q"><b>UL</b><span><%= t.q_ul %></span></div>
+      <div class="q"><b>SGS</b><span><%= t.q_sgs %></span></div>
+      <div class="q"><b>RoHS</b><span><%= t.q_rohs %></span></div>
+      <div class="q"><b>REACH</b><span><%= t.q_reach %></span></div>
+      <div class="q"><b>FDA</b><span><%= t.q_fda %></span></div>
+      <div class="q"><b>COA</b><span><%= t.q_coa %></span></div>
+    </div>
+  </div>
+</section>
+
+<section id="sec-trade" style="background:var(--white)">
+  <div class="wrap center">
+    <span class="kicker"><%= t.sec_trade_k %></span>
+    <h2><%= t.sec_trade_t %></h2>
+    <div class="tt-grid" style="text-align:left">
+      <div class="tt"><span class="ic"><svg viewBox="0 0 24 24"><use href="#i-box"/></svg></span><div><b><%= t.tt_moq_t %></b><p><%= t.tt_moq_d %></p></div></div>
+      <div class="tt"><span class="ic"><svg viewBox="0 0 24 24"><use href="#i-doc"/></svg></span><div><b><%= t.tt_pay_t %></b><p><%= t.tt_pay_d %></p></div></div>
+      <div class="tt"><span class="ic"><svg viewBox="0 0 24 24"><use href="#i-globe"/></svg></span><div><b><%= t.tt_inc_t %></b><p><%= t.tt_inc_d %></p></div></div>
+      <div class="tt"><span class="ic"><svg viewBox="0 0 24 24"><use href="#i-clock"/></svg></span><div><b><%= t.tt_lead_t %></b><p><%= t.tt_lead_d %></p></div></div>
+      <div class="tt"><span class="ic"><svg viewBox="0 0 24 24"><use href="#i-factory"/></svg></span><div><b><%= t.tt_pack_t %></b><p><%= t.tt_pack_d %></p></div></div>
+      <div class="tt"><span class="ic"><svg viewBox="0 0 24 24"><use href="#i-pellets"/></svg></span><div><b><%= t.tt_sample_t %></b><p><%= t.tt_sample_d %></p></div></div>
+    </div>
+  </div>
+</section>
+
+<section class="rfq" id="rfq">
+  <div class="wrap">
+    <div class="center">
+      <span class="kicker"><%= t.sec_rfq_k %></span>
+      <h2 style="color:#fff"><%= t.sec_rfq_t %></h2>
+      <p class="sub"><%= t.sec_rfq_s %></p>
+    </div>
+    <div class="rfq-grid" style="margin-top:36px">
+      <div class="rfq-info">
+        <div class="item">
+          <span class="ic"><svg viewBox="0 0 24 24"><use href="#i-wa"/></svg></span>
+          <div><b>WhatsApp</b><span><%= settings.whatsapp %> — <%= t.whatsapp_text %></span></div>
+        </div>
+        <div class="item">
+          <span class="ic"><svg viewBox="0 0 24 24"><use href="#i-mail"/></svg></span>
+          <div><b><%= t.email_label %></b><span><%= settings.email %></span></div>
+        </div>
+        <div class="item">
+          <span class="ic"><svg viewBox="0 0 24 24"><use href="#i-clock"/></svg></span>
+          <div><b><%= t.hours_label %></b><span><%= t.hours_v %></span></div>
+        </div>
+      </div>
+      <form class="rfqform" id="rfqForm" data-lang="<%= lang %>">
+        <div class="frow">
+          <div><label><%= t.form_name %> *</label><input name="name" required></div>
+          <div><label><%= t.form_email %> *</label><input name="email" type="email" required></div>
+        </div>
+        <div class="frow">
+          <div><label><%= t.form_phone %></label><input name="phone"></div>
+          <div><label><%= t.form_company %></label><input name="company"></div>
+        </div>
+        <div><label><%= t.form_product %></label><input name="product" placeholder="e.g. ENGAGE 8842, 20 FCL"></div>
+        <div><label><%= t.form_message %> *</label><textarea name="message" required></textarea></div>
+        <div class="fmsg" id="rfqMsg"></div>
+        <div style="display:flex;justify-content:space-between;align-items:center;gap:14px;flex-wrap:wrap">
+          <span class="fnote"><%= t.form_note %></span>
+          <button class="btn btn-primary" type="submit"><%= t.form_submit %></button>
+        </div>
+      </form>
+    </div>
+  </div>
+</section>
+
+<% if(news.length){ %>
+<section>
+  <div class="wrap">
+    <div class="center">
+      <span class="kicker"><%= t.sec_news_k %></span>
+      <h2><%= t.sec_news_t %></h2>
+    </div>
+    <div class="news-grid">
+      <% news.forEach(n=>{ %>
+        <div class="news-card">
+          <span class="date"><%= n.date %></span>
+          <h3><%= lang==='zh'?n.title_zh:n.title_en %></h3>
+          <p><%= lang==='zh'?n.body_zh:n.body_en %></p>
+        </div>
+      <% }); %>
+    </div>
+  </div>
+</section>
+<% } %>
+
+<%- include('partials/footer') %>

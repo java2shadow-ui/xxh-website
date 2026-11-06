@@ -1,0 +1,416 @@
+<% /* New-design shared footer + RFQ modal + shared scripts. Uses main i18n t.form_* keys (6 langs). */ %>
+<% /* 页脚公司信息：地址/电话/邮箱/统一社会信用代码 —— 直接照营业执照，是海外买家判断供应商真假的第一眼位置 */ %>
+<% var FT = {
+  en: { addr: 'Room 335, Bldg 1, China Plastic City Int’l Business Center, Yuyao, Ningbo, Zhejiang, China', tel: 'Tel', email: 'Email', uscc: 'USCC', privacy: 'Privacy Policy', terms: 'Terms of Service' },
+  zh: { addr: '浙江省余姚市中国塑料城国际商务中心 1 幢 335 室', tel: '电话', email: '邮箱', uscc: '统一社会信用代码', privacy: '隐私政策', terms: '服务条款' },
+  ru: { addr: 'КНР, пров. Чжэцзян, г. Юйяо, Международный деловой центр China Plastic City, корп. 1, оф. 335', tel: 'Тел.', email: 'E-mail', uscc: 'УНН', privacy: 'Политика конфиденциальности', terms: 'Условия использования' },
+  vi: { addr: 'Phòng 335, Tòa nhà 1, Trung tâm Thương mại Quốc tế China Plastic City, Dư Diêu, Ninh Ba, Chiết Giang, Trung Quốc', tel: 'Điện thoại', email: 'Email', uscc: 'MST', privacy: 'Chính sách bảo mật', terms: 'Điều khoản dịch vụ' },
+  th: { addr: 'ห้อง 335 อาคาร 1 ศูนย์ธุรกิจนานาชาติ China Plastic City อวี้เหยา หนิงโป เจ้อเจียง จีน', tel: 'โทร', email: 'อีเมล', uscc: 'เลขทะเบียน', privacy: 'นโยบายความเป็นส่วนตัว', terms: 'ข้อกำหนดการให้บริการ' },
+  id: { addr: 'Ruang 335, Gedung 1, China Plastic City International Business Center, Yuyao, Ningbo, Zhejiang, Tiongkok', tel: 'Tel', email: 'Email', uscc: 'NIB', privacy: 'Kebijakan Privasi', terms: 'Syarat & Ketentuan' }
+}[lang] || { addr: '', tel: 'Tel', email: 'Email', uscc: 'USCC', privacy: 'Privacy Policy', terms: 'Terms of Service' }; %>
+<footer class="hv2-foot">
+  <div class="wrap">
+    <div class="top">
+      <div>
+        <div class="brand">
+          <svg viewBox="0 0 200 200"><g stroke="#E8EFF7" stroke-width="11" stroke-linecap="round"><line x1="100" y1="100" x2="36" y2="36"/><line x1="100" y1="100" x2="164" y2="36"/><line x1="100" y1="100" x2="36" y2="164"/><line x1="100" y1="100" x2="164" y2="164"/></g><g fill="#E8EFF7"><circle cx="67" cy="67" r="10.5"/><circle cx="133" cy="67" r="10.5"/><circle cx="67" cy="133" r="10.5"/><circle cx="133" cy="133" r="10.5"/></g><g fill="#FFFFFF"><circle cx="34" cy="34" r="15.5"/><circle cx="166" cy="34" r="15.5"/><circle cx="34" cy="166" r="15.5"/><circle cx="166" cy="166" r="15.5"/></g><circle cx="100" cy="100" r="18" fill="#5FA8EF"/></svg>
+          <span><%= lang==='zh' ? '宁波纤讯和新材料有限公司' : 'Ningbo Xianxunhe New Materials' %></span>
+        </div>
+        <p class="desc"><%= lang==='zh'
+          ? '立足浙江余姚中国塑料城，专注于工程塑料、特种高分子原料与改性复合物的国际分销与现货供应。'
+          : 'Premier distributor of engineering plastics and polymer compounds at China Plastic City, Yuyao, Ningbo.' %></p>
+        <div class="meta">
+          <div><b><%= FT.tel %></b><a href="tel:<%= String(settings.phone||'').replace(/[^0-9+]/g,'') %>"><%= settings.phone %></a></div>
+          <div><b><%= FT.email %></b><a href="mailto:<%= settings.email %>"><%= settings.email %></a></div>
+          <div><b><%= lang === 'zh' ? '地址' : 'Address' %></b><span><%= lang === 'zh' ? (settings.addr_zh || FT.addr) : (settings.addr_en || FT.addr) %></span></div>
+          <div><b><%= FT.uscc %></b><span>91330281MA2J5J8M8B</span></div>
+        </div>
+      </div>
+      <div>
+        <h5><%= lang==='zh'?'核心材料牌号':'Featured Resins' %></h5>
+        <ul>
+          <li><a href="/<%= lang %>/grades?q=ABS">ABS (PA-757 / 757K / D-180)</a></li>
+          <li><a href="/<%= lang %>/grades?q=PC">PC (PC-110 / Makrolon 2805)</a></li>
+          <li><a href="/<%= lang %>/grades?q=PP">PP (K8003 / T30S / V30G)</a></li>
+          <li><a href="/<%= lang %>/grades?q=HDPE">HDPE (5000S / 6098)</a></li>
+          <li><a href="/<%= lang %>/grades?q=POM">POM (F20-03 / M90)</a></li>
+          <li><a href="/<%= lang %>/grades"><%= lang==='zh'?'查看全部牌号':'View all grades' %></a></li>
+        </ul>
+      </div>
+      <div class="q">
+        <h5><%= lang==='zh'?'快捷商务通道':'Commercial Inquiries' %></h5>
+        <p><%= lang==='zh'
+          ? '工作日 30 分钟内快速出具当日现货出厂价或 CFR/CIF 港口到岸价报价单。'
+          : 'Rapid quotation within 30 minutes on business days — spot ex-works or CFR/CIF to your port.' %></p>
+        <button class="hv2-btn-dark" onclick="openRfq()"><%= t.form_submit %></button>
+      </div>
+    </div>
+    <div class="bot">
+      <div>© 2026 <%= lang==='zh'?'宁波纤讯和新材料有限公司':'Ningbo Xianxunhe New Materials Co., Ltd.' %> <%= lang==='zh'?'版权所有':'All rights reserved.' %></div>
+      <div class="legal"><a href="/<%= lang %>/privacy"><%= FT.privacy %></a><span>·</span><a href="/<%= lang %>/terms"><%= FT.terms %></a></div>
+      <div class="lg"><%= t.g_note_long || (lang==='zh'
+        ? '本站物性数据为原厂数据表典型值，仅供参考；以实际发货批次 COA 为准。'
+        : 'Datasheet values on this site are typical values from manufacturer documentation, for reference only; the COA of the shipped lot prevails.') %></div>
+    </div>
+  </div>
+</footer>
+
+<!-- RFQ modal (shared) -->
+<div class="hv2-rfq" id="rfqBox">
+  <div class="bg" onclick="closeRfq()"></div>
+  <div class="box">
+    <div class="hd">
+      <div>
+        <h3><%= t.sec_rfq_t %></h3>
+        <p><%= t.sec_rfq_s %></p>
+      </div>
+      <button class="x" onclick="closeRfq()">×</button>
+    </div>
+    <form id="v2RfqForm">
+      <label><%= t.form_name %> *</label>
+      <input type="text" id="v2Name" required>
+      <label><%= t.form_email %> *</label>
+      <input type="email" id="v2Email" required>
+      <label><%= t.form_phone %></label>
+      <input type="text" id="v2Phone">
+      <label><%= t.form_company %></label>
+      <input type="text" id="v2Company">
+      <label><%= t.form_product %></label>
+      <div class="hv2-tagbox" id="v2Tagbox">
+        <input type="text" id="v2ProdInput" placeholder="<%= t.form_grade_ph %>">
+      </div>
+      <label><%= t.form_message %> *</label>
+      <textarea id="v2Msg" placeholder="<%= t.form_msg_ph %>" required></textarea>
+      <div class="ft">
+        <button type="button" class="hv2-btn-out" onclick="closeRfq()"><%= lang==='zh'?'关闭':'Close' %></button>
+        <button type="submit" class="hv2-btn-dark" id="v2Send"><%= t.form_submit %></button>
+      </div>
+    </form>
+    <div class="ok-msg"><%= t.form_success %></div>
+  </div>
+</div>
+
+<a class="hv2-wa" href="https://wa.me/<%= String(settings.whatsapp||'').replace(/[^0-9]/g,'') %>" target="_blank" rel="noopener" aria-label="WhatsApp">
+  <svg viewBox="0 0 24 24"><path d="M12 0a12 12 0 0 0-10.3 18.1L0 24l6.1-1.6A12 12 0 1 0 12 0zm0 22a10 10 0 0 1-5.1-1.4l-.4-.2-3.6 1 1-3.5-.2-.4A10 10 0 1 1 12 22zm5.5-7.5c-.3-.8-1.7-1.6-2.3-1.6-.6-.1-1.1 0-1.5.5-.3.5-.4.8-.8.7-.4-.1-1.6-.6-2.7-1.7-.8-.8-1.3-1.8-1.4-2.2-.1-.4.3-.6.5-.8.2-.3.3-.5.4-.8.1-.3 0-.5-.1-.7-.1-.2-.8-2-1.1-2.4-.3-.4-.6-.4-.8-.4h-.7c-.3 0-.7.1-1 .5-.4.4-1.1 1.2-1.1 2.6 0 1.4 1 2.8 1.1 3 .1.2 2 3.2 4.9 4.4 2.4 1 3 .9 3.6.8.6-.1 1.7-.7 2-1.4.3-.7.3-1.3.2-1.4-.1-.2-.2-.2-.4-.3z"/></svg>
+</a>
+
+<script>
+/* RFQ grade autocomplete — 搜索式下拉建议（首页 + 内页共用）
+ * 数据源：/api/grades/suggest（公开接口，查牌号库）
+ * 交互对齐 Google：边打边搜、匹配高亮、↑↓ 选择、Enter 选中、Esc 关闭
+ *
+ * 关键：下拉挂到 body 上用 position:fixed 定位。
+ * 因为询价弹窗内部是 overflow:auto 的滚动容器，绝对定位下拉会被裁掉。
+ */
+(function () {
+  var DD = 'gs-dd';
+
+  var LANG = (location.pathname.split('/')[1] || 'en').toLowerCase();
+  if (!/^(en|zh|ru|vi|th|id)$/.test(LANG)) LANG = 'en';
+
+  var TXT = {
+    en: { s: 'Searching…', n: 'No match in library — press Enter to add anyway', c: 'matches' },
+    zh: { s: '搜索中…', n: '库里没有这个牌号 — 回车仍可添加', c: '个匹配' },
+    ru: { s: 'Поиск…', n: 'Нет в базе — нажмите Enter, чтобы добавить', c: 'совпадений' },
+    vi: { s: 'Đang tìm…', n: 'Không có trong kho — nhấn Enter để thêm', c: 'kết quả' },
+    th: { s: 'กำลังค้นหา…', n: 'ไม่พบในคลัง — กด Enter เพื่อเพิ่ม', c: 'รายการ' },
+    id: { s: 'Mencari…', n: 'Tidak ada di database — tekan Enter untuk menambah', c: 'hasil' }
+  }[LANG];
+
+  function esc(s) {
+    return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) {
+      return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c];
+    });
+  }
+
+  function mark(text, q) {
+    text = String(text == null ? '' : text);
+    if (!q) return esc(text);
+    var i = text.toLowerCase().indexOf(q.toLowerCase());
+    if (i < 0) return esc(text);
+    return esc(text.slice(0, i)) + '<mark>' + esc(text.substr(i, q.length)) + '</mark>' + esc(text.slice(i + q.length));
+  }
+
+  window.attachGradeSuggest = function (input, onPick) {
+    if (!input) return;
+
+    var dd = document.createElement('div');
+    dd.className = DD;
+    dd.style.display = 'none';
+    document.body.appendChild(dd);
+
+    var items = [], hi = -1, timer = null, reqId = 0, lastQ = '', loading = false;
+
+    function hide() {
+      dd.style.display = 'none';
+      hi = -1;
+      loading = false;
+      reqId++;                                   // 让在途请求失效，避免关掉后又自己弹出来
+    }
+
+    // 固定定位：跟随输入框，下方放不下就向上翻
+    function place() {
+      if (dd.style.display === 'none') return;
+      var box = input.closest('.hv2-tagbox') || input;
+      var r = box.getBoundingClientRect();
+      var h = Math.min(dd.scrollHeight || 240, 260);
+      var gap = 6;
+      var below = window.innerHeight - r.bottom - gap;
+      var above = r.top - gap;
+      var top;
+      if (below >= h || below >= above) top = r.bottom + gap;
+      else top = r.top - h - gap;
+      if (top < 4) top = 4;
+      dd.style.position = 'fixed';
+      dd.style.left = r.left + 'px';
+      dd.style.right = 'auto';
+      dd.style.width = r.width + 'px';
+      dd.style.top = top + 'px';
+      dd.style.bottom = 'auto';
+      dd.style.maxHeight = h + 'px';
+    }
+
+    function render() {
+      var html = '';
+      items.forEach(function (r, i) {
+        html += '<button type="button" class="gs-item' + (i === hi ? ' active' : '') + '" data-i="' + i + '">' +
+          '<b>' + mark(r.grade, lastQ) + '</b>' +
+          '<span>' + mark(r.brand, lastQ) + '</span>' +
+          (r.stock === 'in_stock' ? '<em>现货</em>' : '') +
+          '<i>' + esc(r.polymer) + '</i>' +
+          '</button>';
+      });
+      if (items.length) {
+        html += '<div class="gs-foot">' + (items.length >= 9 ? '9+' : items.length) + ' ' + esc(TXT.c) + '</div>';
+      }
+      dd.innerHTML = html;
+      place();
+      var act = dd.querySelector('.gs-item.active');
+      if (act) {
+        var t = act.offsetTop, vh = dd.clientHeight, st = dd.scrollTop;
+        if (t < st) dd.scrollTop = t;
+        else if (t + act.offsetHeight > st + vh) dd.scrollTop = t + act.offsetHeight - vh;
+      }
+    }
+
+    function apply(rows) {
+      items = rows || [];
+      hi = items.length ? 0 : -1;
+      if (!items.length) {
+        dd.innerHTML = '<div class="gs-empty">' + esc(TXT.n) + '</div>';
+        dd.style.display = 'block';
+        place();
+        return;
+      }
+      dd.style.display = 'block';
+      render();
+    }
+
+    function pick(i) {
+      var r = items[i];
+      if (!r) return;
+      onPick(r.grade);
+      hide();
+      input.value = '';
+      try { input.focus({ preventScroll: true }); } catch (e) { input.focus(); }
+    }
+
+    // 真正发起查询（防抖后调用；用户提前按回车时也直接调用）
+    function doSearch(v) {
+      if (!v) { hide(); return; }
+      var my = ++reqId;
+      loading = true;
+      clearTimeout(timer);
+      // 网络异常兜底：3 秒后放开回车，避免用户被卡死在“搜索中”
+      var guard = setTimeout(function () { if (my === reqId) loading = false; }, 3000);
+
+      fetch('/api/grades/suggest?q=' + encodeURIComponent(v) + '&limit=9')
+        .then(function (r) { return r.json(); })
+        .then(function (rows) {
+          clearTimeout(guard);
+          if (my !== reqId) return;
+          loading = false;
+          if (!Array.isArray(rows)) rows = [];
+          if (rows.length === 1 && rows[0].grade.toLowerCase() === v.toLowerCase()) { hide(); return; }
+          apply(rows);
+        })
+        .catch(function () {
+          clearTimeout(guard);
+          if (my === reqId) { loading = false; hide(); }
+        });
+    }
+
+    input.addEventListener('input', function () {
+      var v = input.value.trim();
+      lastQ = v;
+      clearTimeout(timer);
+      if (!v) { hide(); return; }
+
+      dd.innerHTML = '<div class="gs-empty">' + esc(TXT.s) + '</div>';
+      dd.style.display = 'block';
+      place();
+
+      loading = true;                              // 从敲下第一个字起就算“搜索中”，回车必须被拦
+      timer = setTimeout(function () { doSearch(v); }, 180);
+    });
+
+    // 键盘：必须绑在 document 的捕获阶段。
+    // 同一元素上 capture/bubble 监听器是按注册顺序执行的（capture 不优先），
+    // 而外层表单的「回车=添加标签」先注册，所以只能从 document 层提前截。
+    document.addEventListener('keydown', function (e) {
+      if (e.target !== input) return;
+      var open = dd.style.display !== 'none';
+
+      // 搜索还没返回时按回车：拦下来立即搜一次，别把半截文字当成牌号加进去
+      if (e.key === 'Enter' && loading) {
+        e.preventDefault(); e.stopPropagation();
+        doSearch(input.value.trim());
+        return;
+      }
+
+      if (e.key === 'Escape') { if (open) { e.preventDefault(); hide(); } return; }
+      if (!open || !items.length) return;
+      if (e.key === 'ArrowDown') {
+        e.preventDefault(); e.stopPropagation();
+        hi = (hi + 1) % items.length; render();
+      } else if (e.key === 'ArrowUp') {
+        e.preventDefault(); e.stopPropagation();
+        hi = (hi - 1 + items.length) % items.length; render();
+      } else if (e.key === 'Enter') {
+        e.preventDefault(); e.stopPropagation();
+        pick(hi < 0 ? 0 : hi);
+      }
+    }, true);
+
+    dd.addEventListener('mousedown', function (e) {
+      var b = e.target.closest('.gs-item');
+      if (!b) return;
+      e.preventDefault();
+      pick(parseInt(b.getAttribute('data-i'), 10));
+    });
+
+    dd.addEventListener('mousemove', function (e) {
+      var b = e.target.closest('.gs-item');
+      if (!b) return;
+      var i = parseInt(b.getAttribute('data-i'), 10);
+      if (i !== hi) { hi = i; render(); }
+    });
+
+    input.addEventListener('blur', function () { setTimeout(hide, 150); });
+    document.addEventListener('click', function (e) {
+      if (!dd.contains(e.target) && e.target !== input) hide();
+    });
+    // 弹窗内滚动 / 窗口尺寸变化时重新定位，避免下拉与输入框脱节
+    window.addEventListener('scroll', place, true);
+    window.addEventListener('resize', place);
+  };
+})();
+
+</script>
+<script>
+/* multi-grade tags for RFQ (shared pages) */
+var v2Tags=[];
+function v2RenderTags(){
+  var box=document.getElementById('v2Tagbox'), inp=document.getElementById('v2ProdInput');
+  if(!box||!inp) return;
+  box.querySelectorAll('.hv2-tag').forEach(function(t){t.remove()});
+  v2Tags.forEach(function(g,i){
+    var s=document.createElement('span'); s.className='hv2-tag';
+    s.appendChild(document.createTextNode(g));
+    var x=document.createElement('b'); x.textContent='\u00d7'; x.setAttribute('aria-label','remove');
+    x.onclick=function(){ v2Tags.splice(i,1); v2RenderTags(); };
+    s.appendChild(x);
+    box.insertBefore(s,inp);
+  });
+}
+function v2AddTag(g){
+  g=(g||'').trim().replace(/[,;\u3001]+$/,'');
+  if(!g) return;
+  var dup=v2Tags.some(function(t){return t.toUpperCase()===g.toUpperCase()});
+  if(!dup){ v2Tags.push(g); v2RenderTags(); }
+  var inp=document.getElementById('v2ProdInput'); if(inp) inp.value='';
+}
+(function(){
+  var inp=document.getElementById('v2ProdInput');
+  if(!inp) return;
+  inp.addEventListener('keydown',function(e){
+    if(e.key==='Enter'||e.key===','||e.key==='\u3001'){ e.preventDefault(); v2AddTag(inp.value); }
+    if(e.key==='Backspace'&&!inp.value&&v2Tags.length){ v2Tags.pop(); v2RenderTags(); }
+  });
+  inp.addEventListener('blur',function(){ v2AddTag(inp.value); });
+  if (typeof attachGradeSuggest === 'function') attachGradeSuggest(inp, v2AddTag);
+})();
+/* —— 诊断浮层：URL 带 ?debug=1 时显示实时状态，用于远程排查 —— */
+if (location.search.indexOf('debug=1') > -1) {
+  (function () {
+    var d = document.createElement('div');
+    d.style.cssText = 'position:fixed;left:8px;bottom:8px;z-index:99999;background:rgba(0,0,0,.85);color:#4ade80;font:11px/1.6 Consolas,monospace;padding:10px 12px;border-radius:8px;max-width:94vw;white-space:pre-wrap;pointer-events:none';
+    document.body.appendChild(d);
+    var errs = [];
+    window.addEventListener('error', function (e) {
+      errs.push('[ERROR] ' + (e.message || e.type) + ' @' + String(e.filename || '').split('/').pop() + ':' + e.lineno);
+    });
+    window.addEventListener('unhandledrejection', function (e) {
+      errs.push('[REJECT] ' + ((e.reason && e.reason.message) || e.reason));
+    });
+    setInterval(function () {
+      var inp = document.getElementById('v2ProdInput');
+      var dd = document.querySelector('.gs-dd');
+      var r = inp ? inp.getBoundingClientRect() : null;
+      var lines = [
+        'attach:' + (typeof attachGradeSuggest),
+        'input:' + (inp ? 'yes' : 'MISSING') + '  val:' + (inp ? JSON.stringify(inp.value) : '-'),
+        'dropdown:' + (dd ? dd.style.display : 'NOT-CREATED') +
+          '  items:' + (dd ? dd.querySelectorAll('.gs-item').length : 0),
+        'dd-rect:' + (dd && dd.style.display !== 'none'
+          ? Math.round(dd.getBoundingClientRect().left) + ',' + Math.round(dd.getBoundingClientRect().top) +
+            ' ' + Math.round(dd.getBoundingClientRect().width) + 'x' + Math.round(dd.getBoundingClientRect().height)
+          : '-'),
+        'input-rect:' + (r ? Math.round(r.left) + ',' + Math.round(r.top) + ' ' + Math.round(r.width) + 'x' + Math.round(r.height) : '-'),
+        'viewport:' + innerWidth + 'x' + innerHeight + '  scrollY:' + Math.round(scrollY),
+        'errors:' + (errs.length ? errs.slice(-3).join(' ;; ') : 'none')
+      ];
+      d.textContent = lines.join('\n');
+    }, 400);
+  })();
+}
+function openRfq(prefill){
+  var b=document.getElementById('rfqBox');
+  if(prefill) v2AddTag(prefill);
+  b.classList.add('open'); b.classList.remove('sent');
+  document.body.style.overflow='hidden';
+  setTimeout(function(){document.getElementById('v2Name').focus()},80);
+}
+function closeRfq(){
+  document.getElementById('rfqBox').classList.remove('open');
+  document.body.style.overflow='';
+}
+document.addEventListener('keydown',function(e){ if(e.key==='Escape') closeRfq(); });
+document.addEventListener('click',function(e){
+  var box=document.getElementById('langBox');
+  if(box && !box.contains(e.target)) box.classList.remove('open');
+});
+var v2f=document.getElementById('v2RfqForm');
+if(v2f) v2f.addEventListener('submit',function(e){
+  e.preventDefault();
+  var btn=document.getElementById('v2Send');
+  btn.disabled=true;
+  fetch('/api/inquiry',{
+    method:'POST',headers:{'Content-Type':'application/json'},
+    body:JSON.stringify({
+      name:document.getElementById('v2Name').value.trim(),
+      email:document.getElementById('v2Email').value.trim(),
+      phone:document.getElementById('v2Phone').value.trim(),
+      company:document.getElementById('v2Company').value.trim(),
+      product:v2Tags.join(', '),
+      message:document.getElementById('v2Msg').value.trim(),
+      lang:'<%= lang %>'
+    })
+  }).then(function(r){return r.json()}).then(function(d){
+    document.getElementById('rfqBox').classList.add('sent');
+    btn.disabled=false;
+  }).catch(function(){ btn.disabled=false; });
+});
+</script>
+</body>
+</html>

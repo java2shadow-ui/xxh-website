@@ -1,0 +1,104 @@
+<% /* New-design shared header: head + navbar. Optional locals: pageTitle, pageDesc, langBase, pageCss */ %>
+<% var langBase = typeof langBase !== 'undefined' ? langBase : ''; %>
+<% var path = typeof path !== 'undefined' ? path : ''; %>
+<% var pageCssArr = typeof pageCss !== 'undefined' ? (Array.isArray(pageCss) ? pageCss : [pageCss]) : []; %>
+<% /* Nav labels mirror the home-page nav so the whole site reads as ONE navigation.
+      Inner pages link back to home-page sections (/#applications etc.) instead of
+      duplicate standalone pages — Products/Contact pages stay reachable by URL/SEO. */
+var NV = {
+  en:{catalog:'Resin Grades',applications:'Applications',supplyChain:'Supply Chain',partners:'Partner Brands',contact:'Contact',rfq:'Request Quote'},
+  zh:{catalog:'材料牌号库',applications:'应用方案',supplyChain:'仓储与供应链',partners:'原厂合作品牌',contact:'联系我们',rfq:'快速获取报价'},
+  ru:{catalog:'Марки материалов',applications:'Применения',supplyChain:'Логистика',partners:'Бренды-партнёры',contact:'Контакты',rfq:'Запросить цену'},
+  vi:{catalog:'Mã vật liệu',applications:'Ứng dụng',supplyChain:'Chuỗi cung ứng',partners:'Thương hiệu đối tác',contact:'Liên hệ',rfq:'Xin báo giá'},
+  th:{catalog:'รหัสวัสดุ',applications:'การใช้งาน',supplyChain:'โซ่อุปทาน',partners:'แบรนด์พันธมิตร',contact:'ติดต่อเรา',rfq:'ขอใบเสนอราคา'},
+  id:{catalog:'Kode Material',applications:'Aplikasi',supplyChain:'Rantai Pasok',partners:'Merek Mitra',contact:'Kontak',rfq:'Minta Penawaran'}
+}[lang] || {catalog:'Resin Grades',applications:'Applications',supplyChain:'Supply Chain',partners:'Partner Brands',contact:'Contact',rfq:'Request Quote'};
+%>
+<!DOCTYPE html>
+<html lang="<%= lang %>">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title><%= typeof pageTitle !== 'undefined' && pageTitle ? pageTitle : (t.site_name || 'Ningbo Xianxunhe New Materials') %></title>
+<meta name="description" content="<%= typeof pageDesc !== 'undefined' && pageDesc ? pageDesc : t.hero_sub %>">
+<% var _canon = typeof canonical !== 'undefined' && canonical ? canonical : ('https://www.nbxxh.com/' + lang + '/' + (typeof canonPath !== 'undefined' && canonPath ? canonPath : (langBase ? langBase.replace(/^\//, '') : ''))); %>
+<% var _ogTitle = (typeof pageTitle !== 'undefined' && pageTitle) ? pageTitle : (t.site_name || 'Ningbo Xianxunhe New Materials'); %>
+<% var _ogDesc = (typeof pageDesc !== 'undefined' && pageDesc) ? pageDesc : (t.hero_sub || ''); %>
+<% var _ogImg = (typeof ogImage !== 'undefined' && ogImage) ? ogImage : 'https://www.nbxxh.com/assets/og-default.png'; %>
+<link rel="canonical" href="<%= _canon %>">
+<% if (typeof langAlts !== 'undefined' && langAlts) { Object.keys(langAlts).forEach(function(l){ %><link rel="alternate" hreflang="<%= l %>" href="<%= langAlts[l] %>"><% }); } %>
+<link rel="alternate" hreflang="x-default" href="<%= (typeof langAlts !== 'undefined' && langAlts && langAlts.en) ? langAlts.en : _canon %>">
+<meta property="og:type" content="<%= typeof ogType !== 'undefined' && ogType ? ogType : 'website' %>">
+<meta property="og:site_name" content="Ningbo Xianxunhe New Materials">
+<meta property="og:locale" content="<%= lang %>">
+<meta property="og:url" content="<%= _canon %>">
+<meta property="og:title" content="<%= _ogTitle %>">
+<meta property="og:description" content="<%= _ogDesc %>">
+<meta property="og:image" content="<%= _ogImg %>">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="<%= _ogTitle %>">
+<meta name="twitter:description" content="<%= _ogDesc %>">
+<meta name="twitter:image" content="<%= _ogImg %>">
+<!-- GA4 -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-65MXGN3FTC"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-65MXGN3FTC');
+</script>
+<link rel="icon" type="image/svg+xml" href="/assets/favicon.svg">
+<link rel="stylesheet" href="/assets/fonts/fonts.css">
+<link rel="stylesheet" href="/static/css/home-v2.css?v=20261102a">
+<% pageCssArr.forEach(function(css){ %>
+<link rel="stylesheet" href="<%= css %>">
+<% }); %>
+</head>
+<body class="hv2 hv2-inner">
+
+<header class="hv2-nav">
+  <div class="wrap">
+    <a class="hv2-logo" href="/<%= lang %>">
+      <svg viewBox="0 0 200 200"><g stroke="#1E4E79" stroke-width="11" stroke-linecap="round"><line x1="100" y1="100" x2="36" y2="36"/><line x1="100" y1="100" x2="164" y2="36"/><line x1="100" y1="100" x2="36" y2="164"/><line x1="100" y1="100" x2="164" y2="164"/></g><g fill="#1E4E79"><circle cx="67" cy="67" r="10.5"/><circle cx="133" cy="67" r="10.5"/><circle cx="67" cy="133" r="10.5"/><circle cx="133" cy="133" r="10.5"/></g><g fill="#12395C"><circle cx="34" cy="34" r="15.5"/><circle cx="166" cy="34" r="15.5"/><circle cx="34" cy="166" r="15.5"/><circle cx="166" cy="166" r="15.5"/></g><circle cx="100" cy="100" r="18" fill="#1B6AC9"/></svg>
+      <span><%= lang==='zh' ? '纤讯和新材料' : 'Xianxunhe' %></span>
+    </a>
+    <nav class="hv2-navlinks">
+      <a href="/<%= lang %>/grades" class="<%= path==='grades'?'on':'' %>"><%= NV.catalog %></a>
+      <a href="/<%= lang %>#applications"><%= NV.applications %></a>
+      <a href="/<%= lang %>#supply-chain"><%= NV.supplyChain %></a>
+      <a href="/<%= lang %>#partners"><%= NV.partners %></a>
+      <a href="/<%= lang %>#contact"><%= NV.contact %></a>
+    </nav>
+    <div class="hv2-navact">
+      <div class="hv2-lang" id="langBox">
+        <button type="button" onclick="document.getElementById('langBox').classList.toggle('open')">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+          <span><%= (LANGS.find(l=>l.code===lang)||{}).flag || lang.toUpperCase() %></span>
+        </button>
+        <div class="hv2-lang-menu">
+          <% LANGS.forEach(function(l){ %>
+            <a class="<%= l.code===lang?'on':'' %>" href="/<%= l.code %><%= langBase %>"><%= l.name %><% if(l.code===lang){ %>✓<% } %></a>
+          <% }); %>
+        </div>
+      </div>
+      <button class="hv2-btn-dark" onclick="openRfq()">
+        <span><%= NV.rfq %></span>
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+      </button>
+    </div>
+    <button class="hv2-burger" onclick="document.getElementById('mobNav').classList.toggle('open')" aria-label="Menu">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 6h16M4 12h16M4 18h16"/></svg>
+    </button>
+  </div>
+  <div class="hv2-mob" id="mobNav">
+    <a href="/<%= lang %>/grades"><span><%= NV.catalog %></span><span>→</span></a>
+    <a href="/<%= lang %>#applications"><span><%= NV.applications %></span><span>→</span></a>
+    <a href="/<%= lang %>#supply-chain"><span><%= NV.supplyChain %></span><span>→</span></a>
+    <a href="/<%= lang %>#partners"><span><%= NV.partners %></span><span>→</span></a>
+    <a href="/<%= lang %>#contact"><span><%= NV.contact %></span><span>→</span></a>
+    <a class="cta" href="javascript:openRfq()"><%= NV.rfq %></a>
+  </div>
+</header>
+<%- include('icons') %>

@@ -1,0 +1,23 @@
+<!DOCTYPE html><html><head><meta charset="utf-8"><title>tmp</title>
+<style>body{margin:0;background:#F4F7FB}iframe{width:100%;height:1400px;border:0}</style></head>
+<body>
+<script>
+fetch('/api/admin/login',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({username:'admin',password:'admin'})})
+ .then(function(r){return r.json();})
+ .then(function(d){
+   localStorage.setItem('xxh_token', d.token);
+   var f=document.createElement('iframe');
+   f.src='/admin';
+   f.onload=function(){
+     setTimeout(function(){
+       try{
+         var fd=f.contentDocument, bs=fd.querySelectorAll('.side nav button'), btn=null;
+         for(var i=0;i<bs.length;i++){ if(bs[i].getAttribute('data-page')==='brands') btn=bs[i]; }
+         if(btn) btn.click();
+       }catch(e){}
+     }, 1300);
+   };
+   document.body.appendChild(f);
+ });
+</script>
+</body></html>

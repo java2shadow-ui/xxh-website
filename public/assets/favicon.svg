@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" width="200" height="200">
+  <!-- NBXXH molecular-X icon -->
+  <!-- arms -->
+  <g stroke="#1E4E79" stroke-width="11" stroke-linecap="round">
+    <line x1="100" y1="100" x2="36" y2="36"/>
+    <line x1="100" y1="100" x2="164" y2="36"/>
+    <line x1="100" y1="100" x2="36" y2="164"/>
+    <line x1="100" y1="100" x2="164" y2="164"/>
+  </g>
+  <!-- mid nodes -->
+  <g fill="#1E4E79">
+    <circle cx="67" cy="67" r="10.5"/>
+    <circle cx="133" cy="67" r="10.5"/>
+    <circle cx="67" cy="133" r="10.5"/>
+    <circle cx="133" cy="133" r="10.5"/>
+  </g>
+  <!-- end nodes -->
+  <g fill="#12395C">
+    <circle cx="34" cy="34" r="15.5"/>
+    <circle cx="166" cy="34" r="15.5"/>
+    <circle cx="34" cy="166" r="15.5"/>
+    <circle cx="166" cy="166" r="15.5"/>
+  </g>
+  <!-- core -->
+  <circle cx="100" cy="100" r="18" fill="#1B6AC9"/>
+</svg>

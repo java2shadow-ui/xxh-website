@@ -1,0 +1,187 @@
+<%- include('partials/header-v2', { path: 'grades', langBase: '/grades', pageCss: ['/static/css/style.css?v=20261024b','/static/css/grades.css?v=20261024b','/static/css/grades-v2.css?v=20261101d'] }) %>
+
+<section class="g-hero">
+  <div class="wrap">
+    <span class="g-kicker"><%= t.g_kicker %></span>
+    <h1><%= t.g_title %></h1>
+    <p class="g-sub"><%= t.g_sub %></p>
+    <div class="g-stats">
+      <div><b id="stGrades"><%= rows.length %></b><span><%= t.g_stat_grades %></span></div>
+      <div><b><%= brands.length %></b><span><%= t.g_stat_brands %></span></div>
+      <div><b><%= polymers.length %></b><span><%= t.g_stat_poly %></span></div>
+    </div>
+  </div>
+</section>
+
+<section class="g-body">
+  <div class="wrap">
+
+    <div class="g-toolbar" id="gToolbar">
+      <div class="g-search">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#7C8CA1" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg>
+        <input id="gq" type="search" autocomplete="off" placeholder="<%= t.g_ph %>">
+        <button type="button" id="gqClear" class="g-qclear" title="<%= t.g_reset %>">&times;</button>
+      </div>
+
+      <div class="g-chips" id="gPoly"></div>
+
+      <div class="g-row2">
+        <button type="button" id="gFilterBtn" class="g-fbtn">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 5h18M6 12h12M10 19h4"/></svg>
+          <span id="gFilterLabel"><%= t.g_filter %></span>
+          <em id="gFilterCount" style="display:none">0</em>
+        </button>
+        <select id="gSort" class="g-sort">
+          <option value="grade"><%= t.g_sort %> — <%= t.g_sort_grade %></option>
+          <option value="brand"><%= t.g_sort %> — <%= t.g_sort_brand %></option>
+          <option value="mfr"><%= t.g_sort %> — <%= t.g_sort_mfr %></option>
+          <option value="izod"><%= t.g_sort %> — <%= t.g_sort_izod %></option>
+          <option value="hdt"><%= t.g_sort %> — <%= t.g_sort_hdt %></option>
+        </select>
+        <button type="button" id="gVerBtn" class="g-vbtn" hidden>
+          <span class="g-vck">✓</span><span class="g-vtxt"></span><b id="gVerCnt">0</b>
+        </button>
+        <span class="g-count" id="gCount"></span>
+      </div>
+
+      <div class="g-panel" id="gPanel" style="display:none">
+        <div class="g-pgrid">
+          <label class="g-fl"><span><%= t.g_process %></span>
+            <select id="fProc"><option value=""><%= t.g_all_proc %></option></select>
+          </label>
+          <label class="g-fl"><span><%= t.g_mfr_range %></span>
+            <div class="g-minmax"><input id="fMfrMin" type="number" step="any" placeholder="min"><i>–</i><input id="fMfrMax" type="number" step="any" placeholder="max"></div>
+          </label>
+          <label class="g-fl"><span><%= t.g_dens_range %></span>
+            <div class="g-minmax"><input id="fDenMin" type="number" step="any" placeholder="min"><i>–</i><input id="fDenMax" type="number" step="any" placeholder="max"></div>
+          </label>
+          <label class="g-fl"><span><%= t.g_izod_min %></span>
+            <input id="fIzod" type="number" step="any" placeholder="0">
+          </label>
+          <label class="g-fl"><span><%= t.g_hdt_min %></span>
+            <input id="fHdt" type="number" step="any" placeholder="0">
+          </label>
+          <label class="g-fl"><span><%= t.g_brand_l || t.g_col_brand %></span>
+            <select id="fBrand"><option value=""><%= t.g_all %></option></select>
+          </label>
+          <div class="g-fl g-fl-wide"><span><%= t.g_certs %></span>
+            <div class="g-checks" id="fCerts"></div>
+          </div>
+          <div class="g-fl g-fl-wide"><span><%= t.g_stock %></span>
+            <div class="g-checks" id="fStock"></div>
+          </div>
+        </div>
+        <div class="g-pact">
+          <button type="button" class="g-btn-ghost" id="fReset"><%= t.g_reset %></button>
+        </div>
+      </div>
+    </div>
+
+    <% if (rows.length === 0) { %>
+      <div class="g-empty">
+        <h3><%= t.g_seed_t %></h3>
+        <p><%= t.g_seed_s %></p>
+        <a class="btn btn-primary" href="/<%= lang %>/contact"><%= t.g_empty_cta %></a>
+      </div>
+    <% } else { %>
+      <div class="g-tablewrap">
+        <table class="g-table" id="gTable">
+          <thead>
+            <tr>
+              <th class="g-c-sel"></th>
+              <th><%= t.g_col_grade %></th>
+              <th><%= t.g_col_brand %></th>
+              <th class="g-hide-sm"><%= t.g_col_poly %></th>
+              <th class="g-hide-sm"><%= t.g_col_proc %></th>
+              <th class="num"><%= SHORT.mfr %></th>
+              <th class="num g-hide-sm"><%= SHORT.density %></th>
+              <th class="num g-hide-sm"><%= SHORT.tensile %></th>
+              <th class="num"><%= SHORT.izod %></th>
+              <th class="num g-hide-sm"><%= SHORT.hdt %></th>
+              <th class="g-hide-md"><%= t.g_col_feat %></th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody id="gBody"></tbody>
+        </table>
+      </div>
+      <div class="g-pager" id="gPager"></div>
+      <div class="g-empty" id="gEmpty" style="display:none">
+        <h3><%= t.g_empty_t %></h3>
+        <p><%= t.g_empty_s %></p>
+        <p class="g-sug" id="gSug"></p>
+        <a class="btn btn-outline" href="/<%= lang %>/contact"><%= t.g_empty_cta %></a>
+      </div>
+      <p class="g-note"><%= t.g_note %> <span style="white-space:nowrap">— <%= new Date(Date.now() + 8 * 3600e3).toISOString().slice(0, 10) %></span></p>
+    <% } %>
+
+  </div>
+</section>
+
+<!-- compare tray -->
+<div class="g-tray" id="gTray" style="display:none">
+  <div class="wrap g-tray-in">
+    <div class="g-tray-l">
+      <span class="g-tray-t"><%= t.g_cmp_tray %></span>
+      <div class="g-tray-chips" id="gTrayChips"></div>
+    </div>
+    <div class="g-tray-r">
+      <button type="button" class="g-btn-ghost" id="gTrayClear"><%= t.g_cmp_clear %></button>
+      <button type="button" class="btn btn-primary" id="gTrayGo"><%= t.g_cmp_go %></button>
+    </div>
+  </div>
+</div>
+
+<!-- detail modal -->
+<div class="g-modal" id="gDetail" aria-hidden="true">
+  <div class="g-modal-bg" data-close></div>
+  <div class="g-modal-box" role="dialog">
+    <div class="g-modal-hd">
+      <div>
+        <span class="g-d-brand" id="dBrand"></span>
+        <h3 id="dGrade"></h3>
+        <div class="g-d-tags" id="dTags"></div>
+      </div>
+      <button type="button" class="g-x" data-close>&times;</button>
+    </div>
+    <div class="g-modal-bd" id="dBody"></div>
+    <div class="g-modal-ft">
+      <a class="btn btn-outline" id="dInquire" href="#"><%= t.g_inquire %></a>
+      <a class="btn btn-primary" id="dTds" href="#"><%= t.g_get_tds %></a>
+    </div>
+  </div>
+</div>
+
+<!-- compare modal -->
+<div class="g-modal" id="gCompare" aria-hidden="true">
+  <div class="g-modal-bg" data-close></div>
+  <div class="g-modal-box g-modal-wide" role="dialog">
+    <div class="g-modal-hd">
+      <div>
+        <span class="g-d-brand" id="cKicker"></span>
+        <h3><%= t.g_cmp_t %></h3>
+      </div>
+      <div class="g-hd-tools">
+        <button type="button" class="g-btn-ghost" id="cPrint"><%= t.g_cmp_print %></button>
+        <button type="button" class="g-x" data-close>&times;</button>
+      </div>
+    </div>
+    <div class="g-modal-bd" id="cBody"></div>
+  </div>
+</div>
+
+<script>
+window.DS = <%- JSON.stringify(rows) %>;
+window.GT = <%- JSON.stringify(TG_L) %>;
+window.GLANG = <%- JSON.stringify(lang) %>;
+window.GFIELDS = <%- JSON.stringify(FIELDS) %>;
+window.GPROC = <%- JSON.stringify(Object.fromEntries(Object.entries(PROC_MAP).map(([k,v])=>[k, v[lang]||v.en]))) %>;
+window.GFEAT = <%- JSON.stringify(Object.fromEntries(Object.entries(FEAT_MAP).map(([k,v])=>[k, v[lang]||v.en]))) %>;
+window.GSTOCK = <%- JSON.stringify(Object.fromEntries(Object.entries(STOCK_MAP).map(([k,v])=>[k, v[lang]||v.en]))) %>;
+window.GSHORT = <%- JSON.stringify(SHORT) %>;
+window.GSHORT_L = <%- JSON.stringify(SHORT_L) %>;
+window.GSETTINGS = { whatsapp: <%- JSON.stringify(settings.whatsapp||'') %>, email: <%- JSON.stringify(settings.email||'') %> };
+</script>
+<script src="/static/js/grades.js?v=20261101c"></script>
+
+<%- include('partials/footer-v2') %>

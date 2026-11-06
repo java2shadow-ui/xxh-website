@@ -1,0 +1,23 @@
+# 依赖
+node_modules/
+
+# 生产数据（含询盘、客户信息、后台账号哈希，绝不入库）
+data.db
+data.db-journal
+data.db-wal
+data.db-shm
+backups/
+
+# 用户上传内容（部署时在服务器上）
+public/uploads/
+
+# 截图与临时产物
+.shots/
+*.log
+logs/
+
+# 敏感配置（部署脚本从环境变量取密码，不依赖此文件）
+.env
+
+# Python 缓存
+tools/__pycache__/

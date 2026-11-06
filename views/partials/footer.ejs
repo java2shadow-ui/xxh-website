@@ -1,0 +1,37 @@
+<a class="wa-float" href="https://wa.me/<%= (settings.whatsapp||'').replace(/[^0-9]/g,'') %>" target="_blank" rel="noopener" title="<%= t.whatsapp_text %>">
+  <svg viewBox="0 0 24 24"><use href="#i-wa"/></svg><span><%= t.whatsapp_text %></span>
+</a>
+<footer class="site">
+  <div class="wrap">
+    <div class="foot-grid">
+      <div>
+        <h4><%= settings.site_name_en %></h4>
+        <p><%= t.footer_about %></p>
+        <p style="margin-top:12px;font-size:13px;color:#6E88AF"><%= settings.site_name_zh %></p>
+      </div>
+      <div>
+        <h4><%= t.footer_links %></h4>
+        <a href="/<%= lang %>"><%= t.nav_home %></a>
+        <a href="/<%= lang %>/products"><%= t.nav_products %></a>
+        <a href="/<%= lang %>/about"><%= t.nav_about %></a>
+        <a href="/<%= lang %>/news"><%= t.nav_news %></a>
+        <a href="/<%= lang %>/contact"><%= t.nav_contact %></a>
+      </div>
+      <div>
+        <h4><%= t.footer_contact %></h4>
+        <p style="display:flex;gap:9px;align-items:flex-start"><svg width="17" height="17" viewBox="0 0 24 24" style="flex:none;margin-top:3px"><use href="#i-pin"/></svg><span><%= settings.addr_en %></span></p>
+        <p style="display:flex;gap:9px;align-items:center"><svg width="17" height="17" viewBox="0 0 24 24" style="flex:none"><use href="#i-mail"/></svg><%= settings.email %></p>
+        <p style="display:flex;gap:9px;align-items:center"><svg width="17" height="17" viewBox="0 0 24 24" style="flex:none"><use href="#i-phone"/></svg><%= settings.phone %></p>
+        <p style="display:flex;gap:9px;align-items:center"><svg width="17" height="17" viewBox="0 0 24 24" style="flex:none;color:#7BE3A3"><use href="#i-wa"/></svg>WhatsApp: <%= settings.whatsapp %></p>
+        <p style="display:flex;gap:9px;align-items:center"><svg width="17" height="17" viewBox="0 0 24 24" style="flex:none"><use href="#i-clock"/></svg><%= t.hours_v %></p>
+      </div>
+    </div>
+    <div class="foot-bottom">
+      <span>&copy; <%= new Date().getFullYear() %> <%= settings.site_name_en %>. <%= t.footer_rights %></span>
+      <span>Ningbo · Yuyao · China Plastic City</span>
+    </div>
+  </div>
+</footer>
+<script src="/static/js/main.js?v=20261024b"></script>
+</body>
+</html>

@@ -1,0 +1,109 @@
+<% /* Container loading calculator — customer-facing tool (CSS 3D, zero deps) */ %>
+<%- include('partials/header-v2', { pageTitle: c.title, pageDesc: c.seoDesc, langBase: '/container-calculator' }) %>
+<div class="hv2 hv2-calc">
+  <section class="hv2-sec white" style="padding-top:28px">
+    <div class="wrap">
+      <div class="head">
+        <div class="kicker">📦 <%= c.title %></div>
+        <h2 style="font-size:26px"><%= c.title %></h2>
+        <p style="max-width:640px"><%= c.subtitle %></p>
+      </div>
+
+      <div class="calc-grid">
+        <!-- controls -->
+        <div class="calc-controls">
+          <div class="calc-step">
+            <label><%= c.step1 %></label>
+            <p class="hint"><%= c.step1h %></p>
+            <div class="calc-pills" id="calcPills"></div>
+          </div>
+
+          <div class="calc-step">
+            <label><%= c.step2 %></label>
+            <p class="hint"><%= c.step2h %></p>
+            <div class="calc-range">
+              <input type="range" id="calcTons" min="1" max="100" step="1" value="25">
+              <div class="val"><b id="calcTonsVal">25</b> <%= c.tons %></div>
+            </div>
+          </div>
+
+          <div class="calc-step dens">
+            <label><%= c.density %></label>
+            <p class="hint"><%= c.densityHint %></p>
+            <div><b id="calcDens">0.905</b> kg/L</div>
+          </div>
+
+          <button class="hv2-btn-dark" id="calcCta" style="margin-top:18px"><%= c.cta %></button>
+          <p class="cta-note"><%= c.ctaNote %></p>
+        </div>
+
+        <!-- result -->
+        <div class="calc-result">
+          <div class="calc-vis" id="calcVis">
+            <div class="scene" id="calcScene">
+              <div class="container3d" id="calcBox"></div>
+            </div>
+            <div class="hint3d">↻ <%= c.rotateHint %></div>
+          </div>
+
+          <div class="calc-metrics" id="calcMetrics"></div>
+
+          <div class="calc-compare">
+            <div class="cc-head"><%= c.floorVsPallet %></div>
+            <div class="cc-row" id="calcCompare"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</div>
+
+<style>
+.hv2-calc .calc-grid{display:grid;grid-template-columns:340px 1fr;gap:26px;margin-top:18px}
+@media(max-width:820px){.hv2-calc .calc-grid{grid-template-columns:1fr}}
+.calc-controls{background:#fff;border:1px solid var(--s200);border-radius:16px;padding:22px}
+.calc-step{margin-bottom:20px}
+.calc-step label{font-size:14px;font-weight:800;color:var(--s900)}
+.calc-step .hint{font-size:11.5px;color:var(--s500);margin:3px 0 10px}
+.calc-pills{display:flex;flex-wrap:wrap;gap:7px}
+.calc-pill{border:1px solid var(--s300);background:var(--s50);border-radius:9px;padding:7px 13px;font-size:12.5px;font-weight:700;color:var(--s700);cursor:pointer;transition:.15s}
+.calc-pill:hover{border-color:var(--s800)}
+.calc-pill.on{background:var(--s800);border-color:var(--s800);color:#fff}
+.calc-range input{width:100%;accent-color:var(--s800)}
+.calc-range .val{text-align:right;margin-top:4px;font-size:13px;color:var(--s500)}
+.calc-range .val b{font-size:24px;font-weight:800;color:var(--s900)}
+.calc-step.dens div{font-size:13px;color:var(--s600)}
+.calc-step.dens b{font-size:20px;font-weight:800;color:var(--s900)}
+.cta-note{font-size:11px;color:var(--s400);margin-top:8px;line-height:1.5}
+/* visual */
+.calc-result{background:#fff;border:1px solid var(--s200);border-radius:16px;padding:22px;min-height:420px}
+.calc-vis{position:relative;height:230px;border-radius:12px;background:linear-gradient(180deg,#f4f8fc,#e8eef6);overflow:hidden;margin-bottom:16px}
+.calc-vis .scene{position:absolute;inset:0;perspective:900px;display:flex;align-items:center;justify-content:center}
+.container3d{position:relative;width:210px;height:120px;transform-style:preserve-3d;transition:transform .15s linear}
+.container3d .wall{position:absolute;background:linear-gradient(180deg,rgba(30,78,121,.9),rgba(18,57,92,.95));border:1px solid rgba(255,255,255,.18)}
+.calc-vis .hint3d{position:absolute;bottom:7px;left:0;right:0;text-align:center;font-size:10.5px;color:var(--s500);pointer-events:none}
+/* metrics */
+.calc-metrics{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:16px}
+@media(max-width:560px){.calc-metrics{grid-template-columns:1fr 1fr}}
+.calc-metric{border:1px solid var(--s200);border-radius:11px;padding:13px 14px;background:var(--s50)}
+.calc-metric .k{font-size:11px;color:var(--s500);font-weight:600}
+.calc-metric .v{font-size:20px;font-weight:800;color:var(--s900);margin-top:3px}
+.calc-metric .v small{font-size:12px;font-weight:600;color:var(--s500)}
+.calc-metric.hl{background:var(--s800);border-color:var(--s800)}
+.calc-metric.hl .k{color:#cfe0ee}
+.calc-metric.hl .v{color:#fff}
+/* compare */
+.calc-compare{border-top:1px solid var(--s100);padding-top:14px}
+.cc-head{font-size:12.5px;font-weight:800;color:var(--s700);margin-bottom:10px}
+.cc-row{display:flex;gap:10px}
+.cc-cell{flex:1;border:1px solid var(--s200);border-radius:11px;padding:12px;font-size:12px;color:var(--s600)}
+.cc-cell b{display:block;font-size:16px;color:var(--s900);margin:2px 0}
+.cc-cell .sav{font-size:11px;color:#059669;font-weight:700}
+.cc-cell.win{border-color:#059669;background:#f0fdf4}
+.cc-cell.win .tag{display:inline-block;font-size:9.5px;background:#059669;color:#fff;padding:1px 7px;border-radius:99px;font-weight:700}
+</style>
+
+<script>window.CALC = <%- JSON.stringify(c) %>;</script>
+<script src="/static/js/calculator.js?v=20261101b"></script>
+
+<%- include('partials/footer-v2') %>

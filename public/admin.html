@@ -1,0 +1,858 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Admin — Xianxunhe Website</title>
+<style>
+:root{--navy:#0B1F3A;--ink:#182333;--muted:#5B6B7F;--blue:#1B6AC9;--blue-l:#EAF2FC;--bg:#F4F7FB;--white:#fff;--line:#E3E9F1;--amber:#F59E0B;--green:#188A54;--red:#C03434}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:"Segoe UI",system-ui,"PingFang SC","Microsoft YaHei",sans-serif;background:var(--bg);color:var(--ink);font-size:15px}
+a{color:var(--blue);text-decoration:none}
+button{font-family:inherit;cursor:pointer}
+input,textarea,select{font-family:inherit;font-size:14.5px;border:1.5px solid var(--line);border-radius:8px;padding:9px 12px;width:100%;background:#FBFCFE}
+input:focus,textarea:focus,select:focus{outline:none;border-color:var(--blue)}
+label{font-size:13px;font-weight:600;color:#3D4C61;display:block;margin:10px 0 5px}
+.btn{display:inline-flex;align-items:center;gap:7px;padding:9px 18px;border-radius:8px;border:1.5px solid transparent;font-weight:600;font-size:14px}
+.btn-p{background:var(--blue);color:#fff}.btn-p:hover{background:#0F4E96}
+.btn-s{background:var(--white);border-color:var(--line);color:var(--ink)}.btn-s:hover{border-color:var(--blue);color:var(--blue)}
+.btn-d{background:#FDECEC;color:var(--red);border-color:#F5C8C8}
+.btn-g{background:#E7F7EE;color:var(--green);border-color:#B5E6CB}
+
+/* login */
+#loginView{min-height:100vh;display:grid;place-items:center;background:linear-gradient(135deg,#0B1F3A,#153763)}
+.login-box{background:#fff;border-radius:16px;padding:38px;width:min(380px,92vw);box-shadow:0 24px 70px rgba(0,0,0,.35)}
+.login-box h1{font-size:20px;margin-bottom:4px}
+.login-box p{color:var(--muted);font-size:13px;margin-bottom:18px}
+.login-err{background:#FDECEC;color:var(--red);border:1px solid #F5C8C8;padding:9px 13px;border-radius:8px;font-size:13.5px;margin-bottom:14px;display:none}
+.hint{margin-top:14px;font-size:12.5px;color:var(--muted);background:#F4F7FB;border-radius:8px;padding:9px 12px}
+
+/* shell */
+#appView{display:none}
+.shell{display:grid;grid-template-columns:232px 1fr;min-height:100vh}
+.side{background:var(--navy);color:#B9CDEC;padding:22px 0;display:flex;flex-direction:column}
+.side .brand{padding:0 22px 18px;border-bottom:1px solid rgba(255,255,255,.1);color:#fff;font-weight:700;font-size:16.5px}
+.side .brand small{display:block;font-weight:400;font-size:11.5px;color:#8FA9CC;margin-top:3px}
+.side nav{flex:1;padding:14px 12px}
+.side nav button{display:block;width:100%;text-align:left;background:none;border:0;color:#B9CDEC;padding:11px 14px;border-radius:9px;font-size:14.5px;font-weight:500;margin-bottom:2px}
+.side nav button:hover{background:rgba(255,255,255,.08);color:#fff}
+.side nav button.on{background:var(--blue);color:#fff}
+.side .logout{margin:0 12px;padding:11px 14px;border-radius:9px;background:rgba(255,255,255,.07);color:#B9CDEC;border:0;font-size:14px;width:calc(100% - 24px)}
+.main{padding:30px 34px;overflow-x:auto}
+.main h2{font-size:21px;margin-bottom:4px}
+.main .desc{color:var(--muted);font-size:13.5px;margin-bottom:22px}
+.topbar-row{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:20px;flex-wrap:wrap}
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:14px;margin-bottom:26px}
+.stat{background:#fff;border:1px solid var(--line);border-radius:13px;padding:18px 20px}
+.stat b{font-size:26px;display:block}
+.stat span{color:var(--muted);font-size:13px}
+.stat.hot b{color:var(--blue)}
+table{width:100%;border-collapse:collapse;background:#fff;border:1px solid var(--line);border-radius:13px;overflow:hidden;font-size:14px}
+th,td{padding:11px 14px;text-align:left;border-bottom:1px solid var(--line);vertical-align:top}
+th{background:#F0F5FB;font-size:12.5px;font-weight:700;color:#3D4C61;text-transform:uppercase;letter-spacing:.04em}
+tr:last-child td{border-bottom:0}
+tr:hover td{background:#FAFCFE}
+.tag{display:inline-block;padding:3px 10px;border-radius:999px;font-size:12px;font-weight:700}
+.tag.new{background:#FDF3E2;color:#96590A}
+.tag.handled{background:#E7F7EE;color:var(--green)}
+.pill{background:var(--blue-l);color:#0F4E96;border-radius:6px;padding:2px 8px;font-size:12px;font-weight:600;white-space:nowrap}
+.act{display:flex;gap:6px;flex-wrap:wrap}
+.act button{padding:6px 12px;font-size:12.5px;border-radius:7px}
+.empty{padding:40px;text-align:center;color:var(--muted)}
+/* drag-drop image upload */
+.up-zone{border:2px dashed var(--line);border-radius:12px;padding:20px;text-align:center;cursor:pointer;transition:.15s;background:#FBFCFE;position:relative}
+.up-zone:hover,.up-zone.drag{border-color:var(--blue);background:var(--blue-l)}
+.up-zone input[type=file]{display:none}
+.up-hint{color:var(--muted);font-size:13.5px;line-height:1.7;pointer-events:none}
+.up-hint small{color:#9AA9BC}
+.up-prev{position:relative;display:inline-block}
+.up-rm{position:absolute;top:-10px;right:-10px;width:26px;height:26px;border-radius:50%;border:2px solid #fff;background:var(--red);color:#fff;font-size:15px;line-height:1;cursor:pointer;box-shadow:0 2px 8px rgba(0,0,0,.2)}
+.up-rm:hover{background:#A02020}
+.adm-tools{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:18px}
+.adm-tools input[type=search]{flex:1;min-width:220px;max-width:380px}
+.pg-wrap{display:flex;align-items:center;gap:6px;flex-wrap:wrap;margin-top:16px}
+.pg{min-width:34px;height:34px;padding:0 10px;border:1.5px solid var(--line);background:#fff;border-radius:8px;font-size:13.5px;font-weight:600;color:#3D4C61}
+.pg:hover:not(:disabled){border-color:var(--blue);color:var(--blue)}
+.pg.on{background:var(--blue);border-color:var(--blue);color:#fff}
+.pg:disabled{opacity:.4}
+.pg.dis{opacity:.4}
+.pg-gap{color:var(--muted);padding:0 2px}
+.pg-info{font-size:13px;color:var(--muted);margin-left:10px}
+.bulk-bar{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:12px;padding:10px 14px;background:#FFF8E8;border:1px solid #F3DFB8;border-radius:10px}
+.bulk-n{font-size:13.5px;color:#7A5A10}
+.bulk-n b{font-size:15px;color:#96590A}
+th.ck,td.ck{width:38px;text-align:center}
+th.ck input,td.ck input{width:16px;height:16px;cursor:pointer;accent-color:var(--blue)}
+
+
+
+/* modal */
+.modal{position:fixed;inset:0;background:rgba(11,31,58,.5);display:none;place-items:center;z-index:100;padding:20px}
+.modal.open{display:grid}
+.modal-box{background:#fff;border-radius:16px;width:min(860px,96vw);max-height:92vh;overflow:auto;padding:28px 30px}
+.modal-box h3{font-size:18px;margin-bottom:6px}
+.frow{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.frow3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px}
+.modal-foot{display:flex;justify-content:flex-end;gap:10px;margin-top:20px}
+.langtabs{display:flex;gap:6px;margin:6px 0 2px;flex-wrap:wrap}
+.langtabs button{padding:5px 13px;border-radius:999px;border:1.5px solid var(--line);background:#fff;font-size:12.5px;font-weight:700}
+.langtabs button.on{background:var(--blue);color:#fff;border-color:var(--blue)}
+.spec-row{display:grid;grid-template-columns:1fr 1fr 34px;gap:8px;margin-bottom:8px;align-items:center}
+.spec-row button{width:34px;height:36px;border-radius:8px;background:#FDECEC;color:var(--red);border:0;font-size:16px}
+.imgprev{width:110px;height:74px;object-fit:cover;border-radius:8px;border:1px solid var(--line);margin-top:6px}
+.toast{position:fixed;bottom:24px;right:24px;background:var(--navy);color:#fff;padding:13px 20px;border-radius:10px;font-size:14px;box-shadow:0 12px 34px rgba(0,0,0,.3);display:none;z-index:200}
+@media(max-width:860px){.shell{grid-template-columns:1fr}.side{flex-direction:row;flex-wrap:wrap;align-items:center;padding:10px}.side nav{display:flex;flex-wrap:wrap;padding:6px}.side .brand{border:0;padding:6px 16px}.frow,.frow3{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+
+<div id="loginView">
+  <div class="login-box">
+    <h1>Website Admin</h1>
+    <p>宁波纤讯和新材料 · 官网后台管理</p>
+    <div class="login-err" id="loginErr"></div>
+    <label>用户名</label><input id="liUser" value="admin" autocomplete="username">
+    <label>密码</label><input id="liPass" type="password" placeholder="admin" autocomplete="current-password">
+    <div style="margin-top:18px;display:flex;justify-content:flex-end">
+      <button class="btn btn-p" onclick="login()" style="width:100%;justify-content:center">登录</button>
+    </div>
+    <div class="hint">初始账号密码：<b>admin / admin</b>（登录后请立即修改密码）</div>
+  </div>
+</div>
+
+<div id="appView">
+<div class="shell">
+  <aside class="side">
+    <div class="brand">纤讯和官网<small>Admin Console</small></div>
+    <nav>
+      <button data-page="dash" class="on">📊 仪表盘</button>
+      <button data-page="inquiries">📥 询盘管理</button>
+      <button data-page="products">📦 产品管理</button>
+      <button data-page="brands">🏭 厂家管理</button>
+      <button data-page="categories">🗂 分类管理</button>
+      <button data-page="news">📰 新闻管理</button>
+      <button data-page="settings">⚙️ 网站设置</button>
+      <button data-page="account">🔑 修改密码</button>
+    </nav>
+    <button class="logout" onclick="logout()">退出登录</button>
+  </aside>
+  <div class="main" id="mainArea"></div>
+</div>
+</div>
+
+<div class="modal" id="modal"><div class="modal-box" id="modalBox"></div></div>
+<div class="toast" id="toast"></div>
+
+<script>
+var TOKEN = localStorage.getItem('xxh_token') || '';
+var LANGS = [['en','English'],['zh','中文'],['ru','Русский'],['vi','Tiếng Việt'],['th','ไทย'],['id','Indonesia']];
+var cats = [], productsCache = [], brandsCache = [];
+
+function api(method, url, body) {
+  return fetch(url, {
+    method: method,
+    headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + TOKEN },
+    body: body ? JSON.stringify(body) : undefined
+  }).then(function (r) {
+    if (r.status === 401) { showLogin(); throw new Error('unauthorized'); }
+    return r.json();
+  });
+}
+function toast(msg) {
+  var t = document.getElementById('toast');
+  t.textContent = msg; t.style.display = 'block';
+  setTimeout(function () { t.style.display = 'none'; }, 2600);
+}
+function esc(s) { return String(s == null ? '' : s).replace(/[&<>"]/g, function (c) { return ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' })[c]; }); }
+
+/* ---------- auth ---------- */
+function showLogin() { document.getElementById('appView').style.display = 'none'; document.getElementById('loginView').style.display = 'grid'; }
+function showApp() { document.getElementById('loginView').style.display = 'none'; document.getElementById('appView').style.display = 'block'; }
+function login() {
+  fetch('/api/admin/login', {
+    method: 'POST', headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ username: document.getElementById('liUser').value.trim(), password: document.getElementById('liPass').value })
+  }).then(function (r) { return r.json(); }).then(function (d) {
+    if (d.token) { TOKEN = d.token; localStorage.setItem('xxh_token', TOKEN); showApp(); loadPage('dash'); }
+    else { document.getElementById('loginErr').style.display = 'block'; }
+  });
+}
+document.getElementById('liPass').addEventListener('keydown', function (e) { if (e.key === 'Enter') login(); });
+function logout() {
+  api('POST', '/api/admin/logout').then(function () {
+    TOKEN = ''; localStorage.removeItem('xxh_token'); showLogin();
+  });
+}
+if (TOKEN) { api('GET', '/api/admin/stats').then(function () { showApp(); loadPage('dash'); }).catch(function () {}); }
+
+/* ---------- pages ---------- */
+document.querySelectorAll('.side nav button').forEach(function (b) {
+  b.addEventListener('click', function () {
+    document.querySelectorAll('.side nav button').forEach(function (x) { x.classList.remove('on'); });
+    b.classList.add('on');
+    loadPage(b.getAttribute('data-page'));
+  });
+});
+function loadPage(page) {
+  var area = document.getElementById('mainArea');
+  if (page === 'dash') {
+    api('GET', '/api/admin/stats').then(function (s) {
+      area.innerHTML = '<h2>仪表盘</h2><p class="desc">网站数据总览</p>' +
+        '<div class="cards">' +
+        '<div class="stat hot"><b>' + s.newInquiries + '</b><span>新询盘（未处理）</span></div>' +
+        '<div class="stat"><b>' + s.inquiries + '</b><span>询盘总数</span></div>' +
+        '<div class="stat"><b>' + s.products + '</b><span>产品数</span></div>' +
+        '<div class="stat"><b>' + s.categories + '</b><span>产品分类</span></div>' +
+        '<div class="stat"><b>' + s.news + '</b><span>新闻数</span></div></div>' +
+        '<div class="topbar-row"><h3 style="font-size:16px">最新询盘</h3><button class="btn btn-s" onclick="document.querySelectorAll(\'.side nav button\')[1].click()">查看全部</button></div><div id="latestInq">加载中…</div>';
+      api('GET', '/api/admin/inquiries').then(function (list) {
+        document.getElementById('latestInq').innerHTML = inqTable(list.slice(0, 5));
+      });
+    });
+  }
+  if (page === 'inquiries') {
+    area.innerHTML = '<h2>询盘管理</h2><p class="desc">前台表单提交的询盘，按时间倒序</p><div id="inqBox">加载中…</div>';
+    api('GET', '/api/admin/inquiries').then(function (list) {
+      document.getElementById('inqBox').innerHTML = inqTable(list);
+    });
+  }
+  if (page === 'products') {
+    area.innerHTML = '<h2>产品管理</h2><p class="desc">新增、编辑产品（支持 6 语言字段、参数表、图片上传）</p>' +
+      '<div class="adm-tools">' +
+      '<input id="prodSearch" type="search" placeholder="搜索产品名 / 品牌 / 牌号" autocomplete="off">' +
+      '<select id="prodCatFilter" style="width:auto;min-width:170px"><option value="">全部分类</option></select>' +
+      '<select id="prodBrandFilter" style="width:auto;min-width:170px"><option value="">全部厂家</option></select>' +
+      '<button class="btn btn-p" onclick="editProduct(null)">+ 新增产品</button></div>' +
+      '<div class="bulk-bar" id="prodBulk" style="display:none"></div>' +
+      '<div id="prodBox">加载中…</div><div id="prodPager" class="pg-wrap"></div>';
+    Promise.all([api('GET', '/api/admin/products'), api('GET', '/api/admin/categories'), api('GET', '/api/admin/brands')]).then(function (r) {
+      productsCache = r[0]; cats = r[1]; brandsCache = r[2];
+      var pc = document.getElementById('prodCatFilter');
+      cats.forEach(function (c) { var o = document.createElement('option'); o.value = c.id; o.textContent = c.name_zh; pc.appendChild(o); });
+      var pb = document.getElementById('prodBrandFilter');
+      brandsCache.forEach(function (b) { var o = document.createElement('option'); o.value = b.id; o.textContent = (b.name_zh || b.name_en); pb.appendChild(o); });
+      pc.addEventListener('change', function () { admPage.prod = 1; renderProducts(); });
+      pb.addEventListener('change', function () { admPage.prod = 1; renderProducts(); });
+      document.getElementById('prodSearch').addEventListener('input', function () { admPage.prod = 1; renderProducts(); });
+      renderProducts();
+    }).catch(function (e) {
+      document.getElementById('prodBox').innerHTML = '<div class="empty">加载失败：' + esc(String(e && e.message || e)) + '（请刷新重试）</div>';
+    });
+  }
+  if (page === 'brands') {
+    area.innerHTML = '<h2>厂家管理</h2><p class="desc">管理「分类 → 厂家 → 型号」中的厂家层：添加厂家、上传厂家图片。型号在「产品管理」里添加并选择所属厂家。</p>' +
+      '<div class="adm-tools">' +
+      '<input id="brandSearch" type="search" placeholder="搜索厂家：如 奇美 / LG / CHIMEI" autocomplete="off">' +
+      '<select id="brandCatFilter" style="width:auto;min-width:180px"><option value="">全部分类</option></select>' +
+      '<button class="btn btn-p" onclick="editBrand(null)">+ 新增厂家</button></div>' +
+      '<div class="bulk-bar" id="brandBulk" style="display:none"></div>' +
+      '<div id="brandBox">加载中…</div><div id="brandPager" class="pg-wrap"></div>';
+    Promise.all([api('GET', '/api/admin/brands'), api('GET', '/api/admin/categories')]).then(function (r) {
+      brandsCache = r[0]; cats = r[1];
+      var sel = document.getElementById('brandCatFilter');
+      cats.forEach(function (c) {
+        var o = document.createElement('option'); o.value = c.id; o.textContent = c.name_zh + ' / ' + c.name_en; sel.appendChild(o);
+      });
+      sel.addEventListener('change', function () { admPage.brand = 1; renderBrands(); });
+      document.getElementById('brandSearch').addEventListener('input', function () { admPage.brand = 1; renderBrands(); });
+      renderBrands();
+    }).catch(function (e) {
+      document.getElementById('brandBox').innerHTML = '<div class="empty">加载失败：' + esc(String(e && e.message || e)) + '（请刷新重试）</div>';
+    });
+  }
+  if (page === 'categories') {
+    area.innerHTML = '<h2>分类管理</h2><p class="desc">新增、编辑产品分类（分类是「分类 → 厂家 → 型号」三层结构的第一层）</p>' +
+      '<div class="adm-tools"><span style="flex:1;color:var(--muted);font-size:13px">新增分类后，可在「厂家管理」里给它添加厂家，再到「产品管理」添加型号</span>' +
+      '<button class="btn btn-p" onclick="editCat(null)">+ 新增分类</button></div>' +
+      '<div id="catBox">加载中…</div>';
+    api('GET', '/api/admin/categories').then(function (list) {
+      cats = list;
+      var h = '<table><tr><th>排序</th><th>分类</th><th>品牌</th><th>应用</th><th>状态</th><th>操作</th></tr>';
+      list.forEach(function (c) {
+        h += '<tr><td>' + c.sort + '</td><td><b>' + esc(c.name_zh) + '</b><br><span style="color:var(--muted);font-size:12.5px">' + esc(c.name_en) + '</span></td>' +
+          '<td style="max-width:220px">' + esc(c.brands) + '</td><td style="max-width:220px;font-size:13px">' + esc(c.apps_zh) + '</td>' +
+          '<td>' + (c.active ? '<span class="tag handled">显示</span>' : '<span class="tag new">隐藏</span>') + '</td>' +
+          '<td class="act"><button class="btn btn-s" onclick="editCat(' + c.id + ')">编辑</button>' +
+          '<button class="btn btn-d" onclick="delCat(' + c.id + ')">删除</button></td></tr>';
+      });
+      document.getElementById('catBox').innerHTML = h + '</table>';
+    });
+  }
+  if (page === 'news') {
+    area.innerHTML = '<h2>新闻管理</h2><p class="desc">发布公司动态（英文 + 中文）</p>' +
+      '<div class="topbar-row"><span></span><button class="btn btn-p" onclick="editNews(null)">+ 新增新闻</button></div><div id="newsBox">加载中…</div>';
+    api('GET', '/api/admin/news').then(function (list) {
+      var h = '<table><tr><th>日期</th><th>标题 (EN)</th><th>标题 (中文)</th><th>状态</th><th>操作</th></tr>';
+      if (!list.length) h += '<tr><td colspan="5" class="empty">暂无新闻</td></tr>';
+      list.forEach(function (n) {
+        h += '<tr><td>' + esc(n.date) + '</td><td style="max-width:260px">' + esc(n.title_en) + '</td><td style="max-width:260px">' + esc(n.title_zh) + '</td>' +
+          '<td>' + (n.active ? '<span class="tag handled">显示</span>' : '<span class="tag new">隐藏</span>') + '</td>' +
+          '<td class="act"><button class="btn btn-s" onclick="editNews(' + n.id + ')">编辑</button><button class="btn btn-d" onclick="delNews(' + n.id + ')">删除</button></td></tr>';
+      });
+      document.getElementById('newsBox').innerHTML = h + '</table>';
+    });
+  }
+  if (page === 'settings') {
+    area.innerHTML = '<h2>网站设置</h2><p class="desc">公司名称、联系方式（WhatsApp / 邮箱 / 地址）——全站自动生效</p><div id="setBox">加载中…</div>';
+    api('GET', '/api/admin/settings').then(function (s) {
+      document.getElementById('setBox').innerHTML =
+        '<div style="max-width:560px;background:#fff;border:1px solid var(--line);border-radius:13px;padding:24px">' +
+        '<label>公司名（英文）</label><input id="set_name_en" value="' + esc(s.site_name_en) + '">' +
+        '<label>公司名（中文）</label><input id="set_name_zh" value="' + esc(s.site_name_zh) + '">' +
+        '<label>WhatsApp（含国家码，如 +8615221168218）</label><input id="set_whatsapp" value="' + esc(s.whatsapp) + '">' +
+        '<label>电话</label><input id="set_phone" value="' + esc(s.phone) + '">' +
+        '<label>邮箱</label><input id="set_email" value="' + esc(s.email) + '">' +
+        '<label>地址（英文）</label><input id="set_addr_en" value="' + esc(s.addr_en) + '">' +
+        '<label>地址（中文）</label><input id="set_addr_zh" value="' + esc(s.addr_zh) + '">' +
+        '<label>首页精选牌号（选填 — 控制首页「牌号库」区显示哪 9 款）</label>' +
+        '<textarea id="set_home_grades" rows="3" placeholder="格式：牌号|厂家，逗号或换行分隔，如 PA-757|CHIMEI；只填牌号则自动选现货款；留空=按品类自动挑选现货">' + esc(s.home_grades || '') + '</textarea>' +
+        '<p style="font-size:11.5px;color:var(--muted);margin:6px 0 0;line-height:1.6">最多 9 个，按填写顺序显示；厂家名写一部分即可匹配（如 CHIMEI 会匹配到 CHIMEI / CHIMEI Zhenjiang 中现货那款）</p>' +
+        '<div style="margin-top:20px"><button class="btn btn-p" onclick="saveSettings()">保存设置</button></div></div>';
+    });
+  }
+  if (page === 'account') {
+    area.innerHTML = '<h2>修改密码</h2><p class="desc">修改后台登录密码</p>' +
+      '<div style="max-width:420px;background:#fff;border:1px solid var(--line);border-radius:13px;padding:24px">' +
+      '<label>当前密码</label><input id="pwOld" type="password">' +
+      '<label>新密码（至少 4 位）</label><input id="pwNew" type="password">' +
+      '<div style="margin-top:20px"><button class="btn btn-p" onclick="changePw()">修改密码</button></div></div>';
+  }
+}
+
+function inqTable(list) {
+  if (!list.length) return '<div class="empty">暂无询盘</div>';
+  var h = '<table><tr><th>#</th><th>时间</th><th>客户</th><th>联系方式</th><th>产品</th><th>留言</th><th>语言</th><th>状态</th><th>操作</th></tr>';
+  window._inqMap = {};
+  list.forEach(function (q) {
+    window._inqMap[q.id] = q;
+    h += '<tr><td>' + q.id + '</td><td style="white-space:nowrap;font-size:13px">' + esc(q.created_at) + '</td>' +
+      '<td><b>' + esc(q.name) + '</b>' + (q.company ? '<br><span style="color:var(--muted);font-size:12.5px">' + esc(q.company) + '</span>' : '') + '</td>' +
+      '<td style="font-size:13px">' + esc(q.email) + (q.phone ? '<br>' + esc(q.phone) : '') + '</td>' +
+      '<td>' + (q.product ? q.product.split(/[,、;]+/).map(function (g) { return g.trim(); }).filter(Boolean).map(function (g) { return '<span class="pill">' + esc(g) + '</span>'; }).join(' ') : '—') + '</td>' +
+      '<td style="max-width:280px;font-size:13px">' + esc(q.message) + '</td><td>' + esc(q.lang) + '</td>' +
+      '<td>' + (q.status === 'new' ? '<span class="tag new">新</span>' : '<span class="tag handled">已处理</span>') + '</td>' +
+      '<td class="act">' + (q.status === 'new' ? '<button class="btn btn-g" onclick="markInq(' + q.id + ',\'handled\')">标记已处理</button>' : '<button class="btn btn-s" onclick="markInq(' + q.id + ',\'new\')">重置</button>') +
+      '<button class="btn btn-s" onclick="makeQuote(' + q.id + ')" style="border-color:#2563eb;color:#2563eb">📄 报价</button>' +
+      '<button class="btn btn-d" onclick="delInq(' + q.id + ')">删除</button></td></tr>';
+  });
+  return h + '</table>';
+}
+function makeQuote(id) {
+  var q = (window._inqMap || {})[id];
+  if (!q) { alert('询盘数据未加载'); return; }
+  try {
+    localStorage.setItem('xxh_quote_seed', JSON.stringify({
+      id: q.id, name: q.name || '', email: q.email || '', phone: q.phone || '',
+      company: q.company || '', product: q.product || '', message: q.message || '', lang: q.lang || 'en'
+    }));
+    window.open('/static/admin-quote/index.html', '_blank');
+  } catch (e) { alert('无法启动报价系统：' + e.message); }
+}
+function markInq(id, st) { api('PUT', '/api/admin/inquiries/' + id, { status: st }).then(function () { loadPage('inquiries'); }); }
+function delInq(id) { if (confirm('确定删除该询盘？')) api('DELETE', '/api/admin/inquiries/' + id).then(function () { loadPage('inquiries'); }); }
+
+/* ---------- shared pagination ---------- */
+var admPage = { prod: 1, brand: 1 };
+var admPer = { prod: 20, brand: 20 };
+function pagerHtml(total, page, per, k) {
+  var pages = Math.max(1, Math.ceil(total / per));
+  if (pages <= 1) return '';
+  var list = [], last = 0;
+  for (var i = 1; i <= pages; i++) {
+    if (i === 1 || i === pages || Math.abs(i - page) <= 1) { list.push(i); last = i; }
+    else if (last !== '...') { list.push('...'); last = '...'; }
+  }
+  var h = '<button class="pg' + (page > 1 ? '' : ' dis') + '"' + (page > 1 ? '' : ' disabled') +
+    ' onclick="admGo(' + (page - 1) + ',\'' + k + '\')">&lsaquo;</button>';
+  list.forEach(function (i) {
+    if (i === '...') h += '<span class="pg-gap">&hellip;</span>';
+    else h += '<button class="pg' + (i === page ? ' on' : '') + '" onclick="admGo(' + i + ',\'' + k + '\')">' + i + '</button>';
+  });
+  h += '<button class="pg' + (page < pages ? '' : ' dis') + '"' + (page < pages ? '' : ' disabled') +
+    ' onclick="admGo(' + (page + 1) + ',\'' + k + '\')">&rsaquo;</button>';
+  return h;
+}
+function admGo(n, k) {
+  admPage[k] = Math.max(1, n);
+  if (k === 'prod') renderProducts();
+  else renderBrands();
+  var el = document.getElementById('mainArea');
+  if (el) window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+/* ---------- bulk selection & delete ---------- */
+var selSets = { prod: {}, brand: {} };
+function toggleSel(cb, k) {
+  var id = +cb.getAttribute('data-id');
+  if (cb.checked) selSets[k][id] = true; else delete selSets[k][id];
+  updateBulk(k);
+}
+function bulkAll(cb, k) {
+  var boxes = document.querySelectorAll('#' + (k === 'prod' ? 'prodBox' : 'brandBox') + ' .ck input[type=checkbox]');
+  boxes.forEach(function (b) {
+    var id = +b.getAttribute('data-id');
+    if (cb.checked) selSets[k][id] = true; else delete selSets[k][id];
+    b.checked = cb.checked;
+  });
+  updateBulk(k);
+}
+function selCount(k) { return Object.keys(selSets[k]).length; }
+function updateBulk(k) {
+  var bar = document.getElementById(k === 'prod' ? 'prodBulk' : 'brandBulk');
+  if (!bar) return;
+  var n = selCount(k);
+  if (!n) { bar.style.display = 'none'; bar.innerHTML = ''; return; }
+  bar.style.display = 'flex';
+  bar.innerHTML = '<span class="bulk-n">已选 <b>' + n + '</b> 项</span>' +
+    '<button class="btn btn-d" onclick="bulkDelete(\'' + k + '\')">批量删除</button>' +
+    '<button class="btn btn-s" onclick="clearSel(\'' + k + '\')">取消选择</button>';
+}
+function clearSel(k) {
+  selSets[k] = {};
+  var boxes = document.querySelectorAll('#' + (k === 'prod' ? 'prodBox' : 'brandBox') + ' input[type=checkbox]');
+  boxes.forEach(function (b) { b.checked = false; });
+  updateBulk(k);
+}
+function bulkDelete(k) {
+  var ids = Object.keys(selSets[k]).map(Number);
+  if (!ids.length) return;
+  var label = k === 'prod' ? '型号' : '厂家';
+  var extra = k === 'prod' ? '' : '\n（厂家下的型号不会被删除，仅解除归属）';
+  if (!confirm('确定删除选中的 ' + ids.length + ' 个' + label + '？此操作不可恢复。' + extra)) return;
+  var ep = k === 'prod' ? '/api/admin/products/bulk-delete' : '/api/admin/brands/bulk-delete';
+  api('POST', ep, { ids: ids }).then(function (d) {
+    clearSel(k);
+    toast('已删除 ' + (d.deleted || ids.length) + ' 个' + label);
+    if (k === 'prod') {
+      api('GET', '/api/admin/products').then(function (l) { productsCache = l; admPage.prod = 1; renderProducts(); });
+    } else {
+      api('GET', '/api/admin/brands').then(function (l) { brandsCache = l; admPage.brand = 1; renderBrands(); });
+    }
+  });
+}
+
+/* ---------- shared image upload ---------- */
+function setupUpload(cfg) {
+  var zone = document.getElementById(cfg.zone);
+  var file = document.getElementById(cfg.file);
+  var txt = document.getElementById(cfg.txt);
+  var prev = document.getElementById(cfg.prev);
+  var img = document.getElementById(cfg.img);
+  var rm = document.getElementById(cfg.rm);
+  var hid = document.getElementById(cfg.hidden);
+  var HINT = '📤 点击选择或拖拽图片到这里<br><small>支持 JPG / PNG，建议 800×600 以上，不超过 6MB</small>';
+  function show(rel) {
+    hid.value = rel;
+    img.onerror = function () {
+      img.style.display = 'none';
+      txt.style.display = '';
+      txt.innerHTML = '⚠️ 原图片文件不存在，请重新上传';
+    };
+    img.onload = function () { img.style.display = ''; };
+    img.src = '/uploads/' + rel + '?t=' + Date.now();
+    prev.style.display = '';
+    txt.style.display = 'none';
+  }
+  function reset() {
+    txt.style.display = ''; txt.innerHTML = HINT;
+    prev.style.display = 'none'; hid.value = '';
+  }
+  function upload(f) {
+    if (!f.type.match(/^image\//)) { toast('请选择图片文件（JPG / PNG）'); return; }
+    if (f.size > 6 * 1024 * 1024) { toast('图片超过 6MB，请压缩后再上传'); return; }
+    txt.style.display = ''; txt.innerHTML = '⏳ 正在上传，请稍候…';
+    prev.style.display = 'none';
+    var fr = new FileReader();
+    fr.onload = function () {
+      fetch('/api/admin/upload', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + TOKEN },
+        body: JSON.stringify({ name: cfg.prefix, data: fr.result })
+      }).then(function (r) { return r.json(); }).then(function (d) {
+        if (d.url) {
+          show(String(d.url).split('/uploads/').pop());
+          toast('✅ 上传成功，记得点「保存」');
+        } else {
+          reset(); toast('上传失败，请重试');
+        }
+      }).catch(function () { reset(); toast('上传失败，请检查网络后重试'); });
+    };
+    fr.readAsDataURL(f);
+  }
+  zone.addEventListener('click', function (e) { if (e.target !== rm) file.click(); });
+  zone.addEventListener('dragover', function (e) { e.preventDefault(); zone.classList.add('drag'); });
+  zone.addEventListener('dragleave', function () { zone.classList.remove('drag'); });
+  zone.addEventListener('drop', function (e) {
+    e.preventDefault(); zone.classList.remove('drag');
+    if (e.dataTransfer.files && e.dataTransfer.files[0]) upload(e.dataTransfer.files[0]);
+  });
+  file.addEventListener('change', function () { if (file.files[0]) upload(file.files[0]); });
+  rm.addEventListener('click', function (e) { e.stopPropagation(); reset(); });
+  if (hid.value) show(hid.value);
+}
+
+/* ---------- products ---------- */
+function renderProducts() {
+  var q = String((document.getElementById('prodSearch') || {}).value || '').trim().toLowerCase();
+  var cf = String((document.getElementById('prodCatFilter') || {}).value || '');
+  var bf = String((document.getElementById('prodBrandFilter') || {}).value || '');
+  var list = productsCache.filter(function (p) {
+    if (cf && String(p.category_id) !== cf) return false;
+    if (bf && String(p.brand_id) !== bf) return false;
+    if (q) {
+      var hay = String((p.name_zh || '') + ' ' + (p.name_en || '') + ' ' + (p.brand || '') + ' ' + (p.grade || '')).toLowerCase();
+      if (hay.indexOf(q) < 0) return false;
+    }
+    return true;
+  });
+  var per = admPer.prod;
+  var pages = Math.max(1, Math.ceil(list.length / per));
+  if (admPage.prod > pages) admPage.prod = pages;
+  var slice = list.slice((admPage.prod - 1) * per, admPage.prod * per);
+  var h = '<table><tr><th class="ck"><input type="checkbox" onchange="bulkAll(this,\'prod\')" title="全选本页"></th><th>图</th><th>产品</th><th>分类</th><th>品牌/牌号</th><th>推荐</th><th>状态</th><th>操作</th></tr>';
+  if (!slice.length) h += '<tr><td colspan="8" class="empty">没有匹配的产品</td></tr>';
+  slice.forEach(function (p) {
+    h += '<tr><td class="ck"><input type="checkbox" data-id="' + p.id + '"' + (selSets.prod[p.id] ? ' checked' : '') + ' onchange="toggleSel(this,\'prod\')"></td><td>' + (p.image ? '<img class="imgprev" style="width:64px;height:44px" src="/uploads/' + esc(p.image) + '">' : '—') + '</td>' +
+      '<td><b>' + esc(p.name_zh || p.name_en) + '</b><br><span style="color:var(--muted);font-size:12.5px">' + esc(p.name_en) + '</span></td>' +
+      '<td><span class="pill">' + esc(p.cat_name) + '</span></td><td>' + esc(p.brand) + '<br><span style="color:var(--muted);font-size:12.5px">' + esc(p.grade) + '</span></td>' +
+      '<td>' + (p.featured ? '⭐' : '—') + '</td>' +
+      '<td>' + (p.active ? '<span class="tag handled">显示</span>' : '<span class="tag new">隐藏</span>') + '</td>' +
+      '<td class="act"><button class="btn btn-s" onclick="editProduct(' + p.id + ')">编辑</button><button class="btn btn-d" onclick="delProduct(' + p.id + ')">删除</button></td></tr>';
+  });
+  document.getElementById('prodBox').innerHTML = h + '</table>';
+  var pg = document.getElementById('prodPager');
+  if (pg) pg.innerHTML = (list.length > per ? pagerHtml(list.length, admPage.prod, per, 'prod') : '') +
+    '<span class="pg-info">共 ' + list.length + ' 条</span>';
+}
+function editProduct(id, preset) {
+  var p;
+  if (id) p = productsCache.find(function (x) { return x.id === id; });
+  else p = Object.assign({ category_id: cats[0] ? cats[0].id : 1, featured: 0, active: 1, specs: [], image: '' }, preset || {});
+  if (preset && preset.brand_id) modelFromBrand = preset.brand_id;
+  if (p.specs && typeof p.specs === 'string') { try { p.specs = JSON.parse(p.specs); } catch (e) { p.specs = []; } }
+  openModal('<h3>' + (id ? '编辑产品' : '新增产品') + '</h3><p class="desc">英文字段为必填（其他语言自动回退英文）</p>' +
+    '<div class="frow3">' +
+    '<div><label>分类</label><select id="p_cat">' + cats.map(function (c) { return '<option value="' + c.id + '"' + (c.id === p.category_id ? ' selected' : '') + '>' + esc(c.name_zh) + '</option>'; }).join('') + '</select></div>' +
+    '<div><label>URL slug（英文小写-连字符）</label><input id="p_slug" value="' + esc(p.slug) + '"></div>' +
+    '<div><label>排序（小在前）</label><input id="p_sort" type="number" value="' + (p.sort || 0) + '"></div></div>' +
+    '<div><label>所属厂家（厂家页分组用，在「厂家管理」维护）</label><select id="p_brandid" onchange="pBrandSync()">' + brandOpts(p.category_id, p.brand_id) + '</select></div>' +
+    '<div><label>品牌 Brand（物性匹配键，选厂家后自动填）</label><input id="p_brand" value="' + esc(p.brand) + '"></div></div>' +
+    '<div class="frow">' +
+    '<div><label>牌号 Grade</label><input id="p_grade" value="' + esc(p.grade) + '"></div>' +
+    '<div style="visibility:hidden"></div></div>' +
+    '<div class="langtabs">' + LANGS.map(function (l, i) { return '<button type="button" class="' + (i === 0 ? 'on' : '') + '" onclick="langTab(this,' + i + ')">' + l[1] + '</button>'; }).join('') + '</div>' +
+    LANGS.map(function (l, i) {
+      return '<div class="langpane" data-pane="' + i + '" style="' + (i ? 'display:none' : '') + '">' +
+        '<div class="frow"><div><label>产品名 (' + l[1] + ')</label><input id="p_name_' + l[0] + '" value="' + esc(p['name_' + l[0]] || '') + '"></div>' +
+        '<div style="visibility:hidden"></div></div>' +
+        '<label>描述 (' + l[1] + ')</label><textarea id="p_desc_' + l[0] + '" rows="2">' + esc(p['desc_' + l[0]] || '') + '</textarea></div>';
+    }).join('') +
+    '<label>技术参数（Specifications）</label><div id="specRows"></div>' +
+    '<button class="btn btn-s" type="button" onclick="addSpecRow()">+ 添加参数</button>' +
+    '<label>产品图片（点击或拖拽上传）</label>' +
+    '<div class="up-zone" id="p_zone"><input type="file" id="p_file" accept="image/*" hidden>' +
+    '<div class="up-hint" id="p_uptxt">📤 点击选择或拖拽图片到这里<br><small>支持 JPG / PNG，建议 800×600 以上，不超过 6MB</small></div>' +
+    '<div class="up-prev" id="p_prev" style="display:none"><img id="p_previmg" class="imgprev" style="width:150px;height:100px"><button type="button" class="up-rm" id="p_rm" title="移除图片">×</button></div></div>' +
+    '<input type="hidden" id="p_image" value="' + esc(p.image || '') + '">' +
+    '<div class="frow" style="margin-top:12px">' +
+    '<div><label>推荐到首页</label><select id="p_feat"><option value="1"' + (p.featured ? ' selected' : '') + '>是</option><option value="0"' + (!p.featured ? ' selected' : '') + '>否</option></select></div>' +
+    '<div><label>状态</label><select id="p_active"><option value="1"' + (p.active ? ' selected' : '') + '>显示</option><option value="0"' + (!p.active ? ' selected' : '') + '>隐藏</option></select></div></div>' +
+    '<div class="modal-foot"><button class="btn btn-s" onclick="closeModal()">取消</button><button class="btn btn-p" onclick="saveProduct(' + (id || 'null') + ')">保存</button></div>');
+  (p.specs || []).forEach(function (s) { addSpecRow(s[0], s[1]); });
+  document.getElementById('p_cat').addEventListener('change', function () {
+    document.getElementById('p_brandid').innerHTML = brandOpts(this.value, null);
+  });
+  setupUpload({
+    zone: 'p_zone', file: 'p_file', txt: 'p_uptxt', prev: 'p_prev', img: 'p_previmg', rm: 'p_rm',
+    hidden: 'p_image', prefix: (document.getElementById('p_slug').value || 'prod')
+  });
+}
+function langTab(btn, idx) {
+  document.querySelectorAll('.langtabs button').forEach(function (b) { b.classList.remove('on'); });
+  btn.classList.add('on');
+  document.querySelectorAll('.langpane').forEach(function (p, i) { p.style.display = i === idx ? '' : 'none'; });
+}
+function addSpecRow(k, v) {
+  var d = document.createElement('div');
+  d.className = 'spec-row';
+  d.innerHTML = '<input placeholder="参数名 (如 Melt index)" value="' + esc(k || '') + '"><input placeholder="数值 (如 1.0 g/10min)" value="' + esc(v || '') + '"><button type="button" onclick="this.parentNode.remove()">×</button>';
+  document.getElementById('specRows').appendChild(d);
+}
+function brandOpts(catId, selId) {
+  var list = brandsCache.filter(function (b) { return b.category_id === +catId; });
+  var h = '<option value="">— 不分组 —</option>';
+  list.forEach(function (b) {
+    h += '<option value="' + b.id + '"' + (b.id === selId ? ' selected' : '') + '>' + esc(b.name_zh || b.name_en) + ' (' + esc(b.name_en) + ')</option>';
+  });
+  return h;
+}
+function pBrandSync() {
+  var sel = document.getElementById('p_brandid');
+  var b = brandsCache.find(function (x) { return x.id === +sel.value; });
+  if (b) document.getElementById('p_brand').value = b.name_en || '';
+}
+function saveProduct(id) {
+  var specs = [];
+  document.querySelectorAll('.spec-row').forEach(function (r) {
+    var ins = r.querySelectorAll('input');
+    if (ins[0].value.trim()) specs.push([ins[0].value.trim(), ins[1].value.trim()]);
+  });
+  var body = {
+    category_id: +document.getElementById('p_cat').value,
+    slug: document.getElementById('p_slug').value.trim(),
+    sort: +document.getElementById('p_sort').value || 0,
+    brand: document.getElementById('p_brand').value.trim(),
+    brand_id: +document.getElementById('p_brandid').value || null,
+    grade: document.getElementById('p_grade').value.trim(),
+    featured: document.getElementById('p_feat').value === '1',
+    active: document.getElementById('p_active').value === '1',
+    specs: specs,
+    image: (document.getElementById('p_image') || {}).value || ''
+  };
+  LANGS.forEach(function (l) {
+    body['name_' + l[0]] = (document.getElementById('p_name_' + l[0]) || {}).value || '';
+    body['desc_' + l[0]] = (document.getElementById('p_desc_' + l[0]) || {}).value || '';
+  });
+  if (!body.slug) {
+    body.slug = String((body.brand || 'p') + '-' + (body.grade || Date.now())).toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '');
+  }
+  if (!body.name_en) { toast('请填写英文产品名'); return; }
+  api(id ? 'PUT' : 'POST', '/api/admin/products' + (id ? '/' + id : ''), body).then(function (d) {
+    if (d.ok) { closeModal(); toast('已保存'); afterProductSave(); }
+    else if (d.error === 'dup_slug') toast('slug 已存在，请换一个');
+  });
+}
+function afterProductSave() {
+  if (modelFromBrand) brandModels(modelFromBrand);
+  else loadPage('products');
+}
+function delProduct(id) {
+  if (confirm('确定删除该产品？')) api('DELETE', '/api/admin/products/' + id).then(function () { afterProductSave(); });
+}
+
+/* ---------- brands (厂家) ---------- */
+var modelFromBrand = null;
+var pendingProductPreset = null;
+function brandModels(id) {
+  modelFromBrand = id;
+  Promise.all([api('GET', '/api/admin/products'), api('GET', '/api/admin/brands')]).then(function (r) {
+    productsCache = r[0]; brandsCache = r[1]; renderBrands();
+    var b = brandsCache.find(function (x) { return x.id === id; });
+    if (!b) return;
+    var items = r[0].filter(function (x) { return x.brand_id === id; });
+    var h = '<table><tr><th>牌号</th><th>名称</th><th>状态</th><th>操作</th></tr>';
+    if (!items.length) h += '<tr><td colspan="4" class="empty">该厂家暂无型号，点下方按钮添加</td></tr>';
+    items.forEach(function (p) {
+      h += '<tr><td><b>' + esc(p.grade || '—') + '</b></td>' +
+        '<td>' + esc(p.name_zh || p.name_en) + '<br><span style="color:var(--muted);font-size:12.5px">' + esc(p.name_en) + '</span></td>' +
+        '<td>' + (p.active ? '<span class="tag handled">显示</span>' : '<span class="tag new">隐藏</span>') + '</td>' +
+        '<td class="act"><button class="btn btn-s" onclick="editProduct(' + p.id + ')">编辑</button>' +
+        '<button class="btn btn-d" onclick="delProduct(' + p.id + ')">删除</button></td></tr>';
+    });
+    pendingProductPreset = { category_id: b.category_id, brand: b.name_en, brand_id: b.id };
+    openModal('<h3>' + esc(b.name_zh || b.name_en) + ' — 型号管理（' + items.length + '）</h3>' +
+      '<p class="desc">分类：' + esc(b.cat_name) + '　·　型号在该厂家页面以物性表形式展示给买家</p>' + h + '</table>' +
+      '<div class="modal-foot">' +
+      '<button class="btn btn-p" onclick="editProduct(null,pendingProductPreset)">+ 新增型号到该厂家</button>' +
+      '<button class="btn btn-s" onclick="modelFromBrand=null;closeModal();renderBrands();">完成</button></div>');
+  });
+}
+function renderBrands() {
+  var filter = document.getElementById('brandCatFilter') ? document.getElementById('brandCatFilter').value : '';
+  var q = String((document.getElementById('brandSearch') || {}).value || '').trim().toLowerCase();
+  var list = brandsCache.filter(function (b) {
+    if (filter && b.category_id !== +filter) return false;
+    if (q) {
+      var hay = String((b.name_zh || '') + ' ' + (b.name_en || '') + ' ' + (b.cat_name || '')).toLowerCase();
+      if (hay.indexOf(q) < 0) return false;
+    }
+    return true;
+  });
+  var per = admPer.brand;
+  var pages = Math.max(1, Math.ceil(list.length / per));
+  if (admPage.brand > pages) admPage.brand = pages;
+  var slice = list.slice((admPage.brand - 1) * per, admPage.brand * per);
+  var h = '<table><tr><th class="ck"><input type="checkbox" onchange="bulkAll(this,\'brand\')" title="全选本页"></th><th>图</th><th>厂家</th><th>分类</th><th>型号数</th><th>排序</th><th>状态</th><th>操作</th></tr>';
+  if (!list.length) h += '<tr><td colspan="8" class="empty">该分类暂无厂家，点右上角「新增厂家」</td></tr>';
+  slice.forEach(function (b) {
+    h += '<tr><td class="ck"><input type="checkbox" data-id="' + b.id + '"' + (selSets.brand[b.id] ? ' checked' : '') + ' onchange="toggleSel(this,\'brand\')"></td><td>' + (b.image ? '<img class="imgprev" style="width:64px;height:44px" src="/uploads/' + esc(b.image) + '">' : '—') + '</td>' +
+      '<td><b>' + esc(b.name_zh || b.name_en) + '</b><br><span style="color:var(--muted);font-size:12.5px">' + esc(b.name_en) + '</span></td>' +
+      '<td><span class="pill">' + esc(b.cat_name) + '</span></td>' +
+      '<td><button class="btn btn-s" onclick="brandModels(' + b.id + ')">' + b.product_count + ' 个型号 ›</button></td><td>' + b.sort + '</td>' +
+      '<td>' + (b.active ? '<span class="tag handled">显示</span>' : '<span class="tag new">隐藏</span>') + '</td>' +
+      '<td class="act"><button class="btn btn-s" onclick="editBrand(' + b.id + ')">编辑</button><button class="btn btn-d" onclick="delBrand(' + b.id + ')">删除</button></td></tr>';
+  });
+  document.getElementById('brandBox').innerHTML = h + '</table>';
+  var pg = document.getElementById('brandPager');
+  if (pg) pg.innerHTML = (list.length > per ? pagerHtml(list.length, admPage.brand, per, 'brand') : '') +
+    '<span class="pg-info">共 ' + list.length + ' 家</span>';
+}
+function editBrand(id) {
+  var b = id ? brandsCache.find(function (x) { return x.id === id; })
+             : { category_id: cats[0] ? cats[0].id : 1, name_en: '', name_zh: '', slug: '', image: '', sort: 0, active: 1 };
+  openModal('<h3>' + (id ? '编辑厂家' : '新增厂家') + '</h3><p class="desc">中文名给中文站买家看，英文名是数据关联键（建议与牌号库厂家名一致，如 CHIMEI）</p>' +
+    '<div class="frow">' +
+    '<div><label>所属分类</label><select id="b_cat">' + cats.map(function (c) { return '<option value="' + c.id + '"' + (c.id === b.category_id ? ' selected' : '') + '>' + esc(c.name_zh) + '</option>'; }).join('') + '</select></div>' +
+    '<div><label>排序（小在前）</label><input id="b_sort" type="number" value="' + (b.sort || 0) + '"></div></div>' +
+    '<div class="frow">' +
+    '<div><label>厂家名（中文）</label><input id="b_name_zh" value="' + esc(b.name_zh) + '" placeholder="如 奇美"></div>' +
+    '<div><label>厂家名（英文）</label><input id="b_name_en" value="' + esc(b.name_en) + '" placeholder="如 CHIMEI"></div></div>' +
+    '<label>URL 标识（留空自动按英文名生成）</label><input id="b_slug" value="' + esc(b.slug || '') + '" placeholder="如 chimei">' +
+    '<label>厂家图片（点击或拖拽上传，展示在厂家选择页）</label>' +
+    '<div class="up-zone" id="b_zone"><input type="file" id="b_file" accept="image/*" hidden>' +
+    '<div class="up-hint" id="b_uptxt">📤 点击选择或拖拽图片到这里<br><small>支持 JPG / PNG，建议 800×600 以上，不超过 6MB</small></div>' +
+    '<div class="up-prev" id="b_prev" style="display:none"><img id="b_previmg" class="imgprev" style="width:150px;height:100px"><button type="button" class="up-rm" id="b_rm" title="移除图片">×</button></div></div>' +
+    '<input type="hidden" id="b_image" value="' + esc(b.image || '') + '">' +
+    '<div class="frow" style="margin-top:12px">' +
+    '<div><label>状态</label><select id="b_active"><option value="1"' + (b.active ? ' selected' : '') + '>显示</option><option value="0"' + (!b.active ? ' selected' : '') + '>隐藏</option></select></div>' +
+    '<div></div></div>' +
+    '<div class="modal-foot"><button class="btn btn-s" onclick="closeModal()">取消</button><button class="btn btn-p" onclick="saveBrand(' + (id || 'null') + ')">保存</button></div>');
+  setupUpload({
+    zone: 'b_zone', file: 'b_file', txt: 'b_uptxt', prev: 'b_prev', img: 'b_previmg', rm: 'b_rm',
+    hidden: 'b_image', prefix: 'brand-' + (document.getElementById('b_slug').value || 'img')
+  });
+}
+function saveBrand(id) {
+  var body = {
+    category_id: +document.getElementById('b_cat').value,
+    name_zh: document.getElementById('b_name_zh').value.trim(),
+    name_en: document.getElementById('b_name_en').value.trim(),
+    slug: document.getElementById('b_slug').value.trim(),
+    image: (document.getElementById('b_image') || {}).value || '',
+    sort: +document.getElementById('b_sort').value || 0,
+    active: document.getElementById('b_active').value === '1'
+  };
+  if (!body.name_en && !body.name_zh) { toast('请至少填写一个厂家名'); return; }
+  api(id ? 'PUT' : 'POST', '/api/admin/brands' + (id ? '/' + id : ''), body).then(function (d) {
+    if (d.ok) { closeModal(); toast('已保存'); loadPage('brands'); }
+    else if (d.error === 'duplicate') { toast('该分类下已有同名厂家（URL 标识重复）'); }
+  });
+}
+function delBrand(id) {
+  if (confirm('确定删除该厂家？厂家下的型号不会被删除，但会暂时归入「未分组」。')) {
+    api('DELETE', '/api/admin/brands/' + id).then(function () { loadPage('brands'); });
+  }
+}
+
+/* ---------- categories ---------- */
+function editCat(id) {
+  var c = id ? cats.find(function (x) { return x.id === id; })
+             : { slug: '', name_zh: '', name_en: '', brands: '', desc_en: '', desc_zh: '', apps_en: '', apps_zh: '', sort: 99, active: 1 };
+  if (!c) return;
+  openModal('<h3>' + (id ? '编辑分类：' + esc(c.name_zh) : '新增分类') + '</h3>' +
+    (id ? '' : '<p class="desc">URL 标识只能用小写字母、数字和连字符（如 pom、pc-abs），保存后不建议修改</p>') +
+    '<div class="frow">' +
+    '<div><label>分类名（中文）*</label><input id="c_name_zh" value="' + esc(c.name_zh) + '" placeholder="如 尼龙6（PA6）"></div>' +
+    '<div><label>分类名（英文）*</label><input id="c_name_en" value="' + esc(c.name_en) + '" placeholder="如 Nylon 6 (PA6)"></div></div>' +
+    '<div class="frow">' +
+    '<div><label>URL 标识（slug）*</label><input id="c_slug" value="' + esc(c.slug) + '" placeholder="如 pa6"' + (id ? ' disabled' : '') + '></div>' +
+    '<div><label>排序（小在前）</label><input id="c_sort" type="number" value="' + (c.sort || 0) + '"></div></div>' +
+    '<label>主要品牌（逗号分隔，用于分类卡副标题）</label><input id="c_brands" value="' + esc(c.brands) + '" placeholder="如 BASF, DuPont, 神马">' +
+    '<label>描述（英文）</label><textarea id="c_desc_en" rows="2">' + esc(c.desc_en) + '</textarea>' +
+    '<label>描述（中文）</label><textarea id="c_desc_zh" rows="2">' + esc(c.desc_zh) + '</textarea>' +
+    '<label>应用领域（英文）</label><input id="c_apps_en" value="' + esc(c.apps_en) + '">' +
+    '<label>应用领域（中文）</label><input id="c_apps_zh" value="' + esc(c.apps_zh) + '">' +
+    '<div class="frow"><div><label>状态</label><select id="c_active"><option value="1"' + (c.active ? ' selected' : '') + '>显示</option><option value="0"' + (!c.active ? ' selected' : '') + '>隐藏</option></select></div>' +
+    '<div></div></div>' +
+    '<div class="modal-foot"><button class="btn btn-s" onclick="closeModal()">取消</button><button class="btn btn-p" onclick="saveCat(' + (id || 'null') + ')">保存</button></div>');
+}
+function saveCat(id) {
+  var body = {
+    slug: (document.getElementById('c_slug') || {}).value || '',
+    name_zh: document.getElementById('c_name_zh').value.trim(),
+    name_en: document.getElementById('c_name_en').value.trim(),
+    brands: document.getElementById('c_brands').value,
+    desc_en: document.getElementById('c_desc_en').value,
+    desc_zh: document.getElementById('c_desc_zh').value,
+    apps_en: document.getElementById('c_apps_en').value,
+    apps_zh: document.getElementById('c_apps_zh').value,
+    sort: +document.getElementById('c_sort').value || 0,
+    active: document.getElementById('c_active').value === '1'
+  };
+  if (!body.name_zh && !body.name_en) { toast('请至少填写一个分类名'); return; }
+  api(id ? 'PUT' : 'POST', '/api/admin/categories' + (id ? '/' + id : ''), body).then(function (d) {
+    if (d.ok) { closeModal(); toast('已保存'); loadPage('categories'); }
+    else if (d.error === 'duplicate') toast('该 URL 标识已存在，请换一个');
+    else if (d.error === 'missing_slug') toast('请填写 URL 标识（slug）');
+    else toast('保存失败');
+  });
+}
+function delCat(id) {
+  var c = cats.find(function (x) { return x.id === id; }) || {};
+  api('DELETE', '/api/admin/categories/' + id, { force: false }).then(function (d) {
+    if (d.ok) { toast('分类已删除'); loadPage('categories'); return; }
+    if (d.error === 'not_empty') {
+      var msg = '「' + (c.name_zh || c.name_en || id) + '」下还有 ' + d.brands + ' 个厂家、' + d.products + ' 个型号。\n\n' +
+        '点【确定】将连同这些内容一起删除（不可恢复）；\n点【取消】则保留，你先把厂家/型号删掉或移走再来。';
+      if (confirm(msg)) {
+        api('DELETE', '/api/admin/categories/' + id, { force: true }).then(function (r) {
+          toast('已删除分类及其 ' + (r.deletedProducts || 0) + ' 个型号'); loadPage('categories');
+        });
+      }
+      return;
+    }
+    toast('删除失败');
+  });
+}
+
+/* ---------- news ---------- */
+function editNews(id) {
+  var n = id ? null : { active: 1 };
+  if (id) {
+    api('GET', '/api/admin/news').then(function (list) {
+      var n = list.find(function (x) { return x.id === id; });
+      newsForm(n);
+    });
+  } else newsForm({ active: 1, date: new Date().toISOString().slice(0, 10) });
+}
+function newsForm(n) {
+  openModal('<h3>' + (n.id ? '编辑' : '新增') + '新闻</h3>' +
+    '<div class="frow"><div><label>标题（英文）</label><input id="n_title_en" value="' + esc(n.title_en) + '"></div>' +
+    '<div><label>标题（中文）</label><input id="n_title_zh" value="' + esc(n.title_zh) + '"></div></div>' +
+    '<label>正文（英文）</label><textarea id="n_body_en" rows="3">' + esc(n.body_en) + '</textarea>' +
+    '<label>正文（中文）</label><textarea id="n_body_zh" rows="3">' + esc(n.body_zh) + '</textarea>' +
+    '<div class="frow"><div><label>日期</label><input id="n_date" type="date" value="' + esc(n.date) + '"></div>' +
+    '<div><label>状态</label><select id="n_active"><option value="1"' + (n.active ? ' selected' : '') + '>显示</option><option value="0"' + (!n.active ? ' selected' : '') + '>隐藏</option></select></div></div>' +
+    '<div class="modal-foot"><button class="btn btn-s" onclick="closeModal()">取消</button><button class="btn btn-p" onclick="saveNews(' + (n.id || 'null') + ')">保存</button></div>');
+}
+function saveNews(id) {
+  var body = {
+    title_en: document.getElementById('n_title_en').value,
+    title_zh: document.getElementById('n_title_zh').value,
+    body_en: document.getElementById('n_body_en').value,
+    body_zh: document.getElementById('n_body_zh').value,
+    date: document.getElementById('n_date').value,
+    active: document.getElementById('n_active').value === '1'
+  };
+  api(id ? 'PUT' : 'POST', '/api/admin/news' + (id ? '/' + id : ''), body).then(function () { closeModal(); toast('已保存'); loadPage('news'); });
+}
+function delNews(id) { if (confirm('确定删除？')) api('DELETE', '/api/admin/news/' + id).then(function () { loadPage('news'); }); }
+
+/* ---------- settings & password ---------- */
+function saveSettings() {
+  api('PUT', '/api/admin/settings', {
+    site_name_en: document.getElementById('set_name_en').value,
+    site_name_zh: document.getElementById('set_name_zh').value,
+    whatsapp: document.getElementById('set_whatsapp').value,
+    phone: document.getElementById('set_phone').value,
+    email: document.getElementById('set_email').value,
+    addr_en: document.getElementById('set_addr_en').value,
+    addr_zh: document.getElementById('set_addr_zh').value,
+    home_grades: document.getElementById('set_home_grades').value
+  }).then(function () { toast('设置已保存，首页牌号卡立即生效'); });
+}
+function changePw() {
+  api('POST', '/api/admin/password', { oldP: document.getElementById('pwOld').value, newP: document.getElementById('pwNew').value })
+    .then(function (d) { if (d.ok) toast('密码已修改'); else toast(d.error === 'bad_old' ? '当前密码不正确' : '新密码太短'); });
+}
+
+/* ---------- modal ---------- */
+function openModal(html) {
+  document.getElementById('modalBox').innerHTML = html;
+  document.getElementById('modal').classList.add('open');
+}
+function closeModal() { document.getElementById('modal').classList.remove('open'); }
+document.getElementById('modal').addEventListener('click', function (e) { if (e.target === this) closeModal(); });
+</script>
+</body>
+</html>
